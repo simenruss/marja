@@ -86,6 +86,10 @@ h2.sec{font-size:28px;text-transform:uppercase;font-weight:700}
 .ex .rx b{color:var(--ink);font-weight:700}
 .ex .cue{font-size:15px;margin:0}
 .ex.ss{border-top:1px dashed var(--line)}
+.how{grid-column:2;font-size:14px;color:var(--muted)}
+.how summary{cursor:pointer;color:var(--teal);font-weight:600}
+.how p{margin:4px 0 0}
+.steps{margin:6px 0 0;padding-left:20px;display:grid;gap:6px;font-size:15px}
 .ss-tag{font-family:var(--display);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--teal)}
 .plus{color:var(--accent-ink);font-weight:700}
 .ex.done .name,.ex.done .cue{opacity:.5;text-decoration:line-through}
@@ -166,12 +170,24 @@ a.ext{color:var(--teal)}
 <!-- STYRKE -->
 <section class="view" id="v-styrke" aria-labelledby="h-styrke">
   <h2 class="sec" id="h-styrke">Styrke</h2>
-  <p class="lead">Tre økter, maks 60 minutter med oppvarming. A har de tunge beina, dagen etter mandagens intervaller. B er bare overkropp og kjerne. C har lette bein og spenst, siden lørdagens intervaller kommer dagen etter. Overkroppen får mest volum.</p>
+  <p class="lead">Tre økter, maks 60 minutter med oppvarming. A har de tyngste beina, dagen etter mandagens intervaller. B er bare overkropp og kjerne. C har lette bein og spenst, siden lørdagens intervaller kommer dagen etter. Overkroppen får mest volum.</p>
   <div class="seg" role="group" aria-label="Velg økt">
     <button class="btn" data-s="A" aria-pressed="true">A · Tir</button>
     <button class="btn" data-s="B" aria-pressed="false">B · Ons</button>
     <button class="btn" data-s="C" aria-pressed="false">C · Fre</button>
   </div>
+  <details class="card" open>
+    <summary style="cursor:pointer;font-family:var(--display);font-size:20px;font-weight:700;text-transform:uppercase">Slik gjennomføres en økt</summary>
+    <ol class="steps">
+      <li><b>Oppvarming, 5 min.</b> Sykkel eller romaskin, så én runde med lette øvelser. Står øverst i hver økt.</li>
+      <li><b>Startvekt</b> står i Excel-arket under «Startvekter». Første gang: kjenn etter, og juster ett trinn om toppen av spennet ikke gir riktig reserve.</li>
+      <li><b>Supersett:</b> still opp begge apparatene. Ta ett sett av første øvelse, gå rett til andre, hvil tiden som står, og gjenta. Slik holdes økta under en time.</li>
+      <li><b>RIR er reps i reserve:</b> hvor mange flere du kunne tatt med god teknikk. RIR 2 betyr stopp når du har to igjen. RIR 0 betyr at neste rep ikke ville gått.</li>
+      <li><b>Tempo:</b> 2–3 sek ned, kort stopp i strekk, kontrollert opp. Muskelen skal jobbe gjennom hele bevegelsen, ikke vekta svinge.</li>
+      <li><b>Progresjon:</b> når alle sett når toppen av spennet, går vekta opp ett trinn neste gang. Reps faller da litt, og du bygger opp igjen.</li>
+      <li><b>Logg</b> vekt og reps i Excel-arket rett etter økta, og kryss av øvelsene her underveis.</li>
+    </ol>
+  </details>
   <div class="card" id="session"></div>
   <div class="grid2">
     <div class="card">
@@ -187,12 +203,12 @@ a.ext{color:var(--teal)}
     <div class="card">
       <h3 style="font-size:20px;text-transform:uppercase">Sett per uke</h3>
       <table style="margin-top:6px;font-size:14px">
-        <tr><td>Sidedeltoid</td><td class="n">10 → 13</td></tr>
+        <tr><td>Sidedeltoid</td><td class="n">12 → 15</td></tr>
         <tr><td>Rygg</td><td class="n">12 → 15</td></tr>
         <tr><td>Bryst · skulderpress</td><td class="n">9 · 3</td></tr>
-        <tr><td>Biceps · triceps</td><td class="n">2 · 2</td></tr>
+        <tr><td>Biceps · triceps</td><td class="n">3 · 3</td></tr>
         <tr><td>Quad · bakside og sete</td><td class="n">5 · 8</td></tr>
-        <tr><td>Legg + spenst</td><td class="n">3 + 3</td></tr>
+        <tr><td>Legg + spenst</td><td class="n">4 + 3</td></tr>
         <tr><td>Kjerne, onsdag og fredag</td><td class="n">12</td></tr>
       </table>
     </div>
@@ -246,14 +262,14 @@ a.ext{color:var(--teal)}
     <p style="margin:8px 0;font-size:15px"><b>Hvert løft:</b> lett × 10, rundt 50 % × 5, 70 % × 3, 85 % × 1. Så testsettet. Inntil tre forsøk med 3 min pause.</p>
     <div class="scroll"><table>
       <tr><th>Løft</th><th>Test</th><th>Stopp når</th></tr>
-      <tr><td>Knebøy</td><td>Tyngste rene 5</td><td>Farten opp faller tydelig</td></tr>
+      <tr><td>Beinpress</td><td>Tyngste rene 8</td><td>Farten opp faller tydelig</td></tr>
       <tr><td>Rumensk markløft</td><td>8 reps, 2 i reserve</td><td>Ryggen runder. Aldri maks.</td></tr>
-      <tr><td>Nedtrekk</td><td>Tyngste rene 8</td><td>Brystet slutter å komme opp</td></tr>
-      <tr><td>Skulderpress, manualer</td><td>Tyngste rene 8</td><td>Svai i ryggen</td></tr>
-      <tr><td>Chins</td><td>Maks med egen vekt</td><td>0 reps: noter motvekten for 5</td></tr>
+      <tr><td>Nedtrekk, smalt grep</td><td>Tyngste rene 8</td><td>Brystet slutter å komme opp</td></tr>
+      <tr><td>Skulderpress, maskin</td><td>Tyngste rene 8</td><td>Svai i ryggen</td></tr>
+      <tr><td>Hang-ups</td><td>Maks med egen vekt</td><td>0 reps: noter motvekten for 6</td></tr>
       <tr><td>Stille lengde</td><td>Beste av 3</td><td>Mål fra hælen</td></tr>
     </table></div>
-    <p class="foot" style="margin:8px 0 0">Noter vekt, reps og hvor mange hun hadde igjen. Er knebøy ny teknikk: test 8 reps med 2 i reserve. Resten av øvelsene: første økt, finn vekta der toppen av spennet gir 1–2 i reserve.</p>
+    <p class="foot" style="margin:8px 0 0">Noter vekt, reps og hvor mange hun hadde igjen. Resten av øvelsene: første økt, finn vekta der toppen av spennet gir 1–2 i reserve.</p>
   </div>
   <div class="grid2">
     <div class="card">
@@ -394,33 +410,33 @@ document.getElementById("cd-sl").textContent = days(new Date(2027,3,24))+" dager
 
 // økter
 const S = {
- A:{title:"Styrke A · tunge bein + overkropp", when:"Tirsdag, dagen etter mandagens intervaller og 48 timer før torsdagens 10 km-fart. Ca. 55 min.", wu:"Ekstra for A: tom stang × 10 i knebøy og rumensk markløft før rampen.", ex:[
-  {n:"Knebøy",eq:"stang",s:3,r:"4–6",rir:"2",h:"3 min",c:"Ramp: lett × 10, 50 % × 5, 70 % × 3, 85 % × 1. Kontrollert ned, maks fart opp."},
-  {n:"Rumensk markløft",eq:"stang",s:3,r:"6–8",rir:"2",h:"2,5 min",c:"Hoftene bak, stanga langs lårene. Sete og bakside."},
-  {n:"Nedtrekk, bredt grep",eq:"kabel",s:3,r:"8–12",rir:"1",h:"90 sek etter paret",c:"Ryggbredden. Full strekk på toppen.",ssA:true,grow:true},
-  {n:"Skrå manualpress, 30°",eq:"manualer",s:3,r:"8–12",rir:"1",h:"",c:"Øvre bryst og fremre skulder.",ssB:true},
-  {n:"Sidehev, kabel bak kroppen",eq:"kabel, lavt feste",s:4,r:"12–15",rir:"0–1",h:"45 sek etter paret",c:"Skulderbredden. Lang muskellengde.",ssA:true,grow:true},
-  {n:"Sittende tåhev",eq:"maskin",s:3,r:"12–15",rir:"1",h:"",c:"Soleus og akilles. 2 sek pause i bunnen.",ssB:true}]},
- B:{title:"Styrke B · overkropp + kjerne", when:"Onsdag. Ingen bein, så de er klare til torsdagens 10 km-fart. Ca. 50 min.", wu:"Ekstra for B: 2 × 10 strikk-trekk og 10 lette skulderpress med manualer.", ex:[
-  {n:"Chins, assistert",eq:"maskin eller strikk",s:3,r:"5–8",rir:"1–2",h:"2 min etter paret",c:"Mindre motvekt når 8 går. Mål: egen vekt.",ssA:true},
-  {n:"Skulderpress, sittende",eq:"manualer",s:3,r:"8–10",rir:"1–2",h:"",c:"Albuene litt foran kroppen. Ikke svai.",ssB:true},
-  {n:"Kabelroing, sittende",eq:"kabel",s:3,r:"10–12",rir:"1",h:"75 sek etter paret",c:"Strekk fram, klem skulderbladene bak.",ssA:true,grow:true},
-  {n:"Armhevinger",eq:"gulv",s:3,r:"maks",rir:"2",h:"",c:"Stopp 2 før stopp. Benk, så gulv, så vekt på ryggen.",ssB:true},
-  {n:"Sidehev",eq:"manualer",s:3,r:"12–20",rir:"0–1",h:"45 sek etter paret",c:"Led med albuene.",ssA:true,grow:true},
-  {n:"Omvendt pec deck",eq:"maskin",s:3,r:"15–20",rir:"0–1",h:"",c:"Bakre skulder og holdning.",ssB:true},
-  {n:"Bayesian curl",eq:"kabel bak kroppen",s:2,r:"10–12",rir:"0–1",h:"45 sek etter paret",c:"Biceps i full strekk.",ssA:true},
-  {n:"Triceps over hodet",eq:"kabel, tau",s:2,r:"10–12",rir:"0–1",h:"",c:"Lange hodet i strekk.",ssB:true},
-  {n:"Dead bug",eq:"gulv",s:3,r:"8/side",rir:"2",h:"45 sek etter paret",c:"Korsryggen i gulvet, pust helt ut. Dyp mage.",ssA:true},
-  {n:"Omvendt crunch",eq:"benk",s:3,r:"10–15",rir:"1",h:"",c:"Nedre mage. Rull bekkenet opp, ikke sving beina.",ssB:true}]},
- C:{title:"Styrke C · lette bein, sete + overkropp", when:"Fredag, dagen før lørdagens terskel. Beina lett, 3 i reserve. Ca. 50 min.", wu:"Ekstra for C: 2 × 10 sek lette hopp på stedet før spensten.", ex:[
-  {n:"Pogohopp",eq:"gulv",s:3,r:"15",rir:"–",h:"60 sek",c:"Stive ankler, rask kontakt. Kort og lett, ikke slitsomt."},
-  {n:"Bulgarsk utfall",eq:"manualer",s:2,r:"8/bein",rir:"3",h:"90 sek",c:"Lett i dag. Svakeste bein først, len litt fram for mer sete."},
-  {n:"45° hofteekstensjon",eq:"benk, skive",s:3,r:"10–15",rir:"2",h:"60 sek etter paret",c:"Setet uten Booty Builder. Tær litt ut, rund ryggen lett.",ssA:true},
-  {n:"Enarms manualroing",eq:"manual, benk",s:3,r:"10–12/side",rir:"1",h:"",c:"Albuen mot hofta.",ssB:true,grow:true},
-  {n:"Skråbenk Smith, 30°",eq:"Smith",s:3,r:"8–10",rir:"1",h:"60 sek etter paret",c:"Ned til brystet, kontrollert.",ssA:true},
-  {n:"Sidehev, enarms",eq:"kabel, lavt feste",s:3,r:"12–15",rir:"0–1",h:"",c:"Konstant spenning.",ssB:true,grow:true},
-  {n:"Abhjul, knestående",eq:"abhjul",s:3,r:"8–12",rir:"1–2",h:"45 sek etter paret",c:"Ribbeina ned, ikke svai.",ssA:true},
-  {n:"Pallof-press",eq:"kabel",s:3,r:"10/side",rir:"2",h:"",c:"Hoftene stille.",ssB:true}]}
+ A:{title:"Styrke A · bein + overkropp", when:"Tirsdag, dagen etter mandagens intervaller og 48 timer før torsdagens 10 km-fart. Ca. 55 min.", wu:"Ekstra for A: ett lett sett beinpress × 12 og tom stang × 10 i rumensk markløft.", ex:[
+  {n:"Beinpress",eq:"maskin",s:3,r:"8–12",rir:"2",h:"2 min",c:"Full dybde, kontrollert ned.",x:"Føttene midt på platen i hoftebredde. Senk til knærne er ved brystet uten at korsryggen løfter seg fra setet, 2–3 sek ned, press opp uten å låse knærne helt. Tungt nok til at 2 reps i reserve er ærlig."},
+  {n:"Rumensk markløft",eq:"stang",s:3,r:"6–8",rir:"2",h:"2,5 min",c:"Hoftene bak, stanga langs lårene.",x:"Stå med stanga i hoftehøyde, lett bøy i knærne. Skyv hoftene rett bak og la stanga gli langs lårene til du kjenner strekk bak i lårene, ofte rett under knærne. Ryggen rett hele veien. Press hoftene fram for å reise deg."},
+  {n:"Nedtrekk, smalt grep",eq:"kabel, V-håndtak",s:3,r:"8–12",rir:"1",h:"90 sek etter paret",c:"Full strekk på toppen, albuene mot hoftene.",x:"Sitt med lårene låst under puta. La armene strekke seg helt ut på toppen så skulderbladene glir opp. Trekk håndtaket mot øvre bryst med albuene tett inntil kroppen, len deg lett bakover. 2 sek opp.",ssA:true,grow:true},
+  {n:"Skråbenk Smith, 30°",eq:"Smith",s:3,r:"6–10",rir:"1",h:"",c:"Øvre bryst. Ned til brystet, kontrollert.",x:"Benken på 30°, stanga skal treffe øvre bryst rett under kragebeinet. Skulderbladene samlet og ned, føttene i gulvet. Senk på 2 sek til stanga nesten berører brystet, press opp uten å låse helt.",ssB:true},
+  {n:"Sidehev, kabel i hoftehøyde",eq:"kabel, håndtak",s:4,r:"12–15",rir:"0–1",h:"60 sek etter paret",c:"Skulderbredden. Konstant spenning.",x:"Kabelen i hoftehøyde, stå sidelengs med kabelen på motsatt side av armen du løfter. Løft armen ut til siden til skulderhøyde med lett bøy i albuen, led med albuen, ikke hånden. 2–3 sek ned. Begge armer, svakeste først.",ssA:true,grow:true},
+  {n:"Stående tåhev",eq:"maskin",s:4,r:"8–12",rir:"1",h:"",c:"Full strekk i bunnen, 2 sek pause.",x:"Strake knær, fotballene på kanten. Senk hælene så langt ned du kommer og hold 2 sek i strekk, så press helt opp på tærne. Leggen og akillesen tar støyten i hvert løpesteg.",ssB:true}]},
+ B:{title:"Styrke B · overkropp + kjerne", when:"Onsdag. Ingen bein, så de er klare til torsdagens 10 km-fart. Ca. 55 min.", wu:"Ekstra for B: 2 × 10 strikk-trekk og ett lett sett i skulderpressmaskinen.", ex:[
+  {n:"Hang-ups, assistert",eq:"assistert maskin",s:3,r:"6–10",rir:"1–2",h:"2 min etter paret",c:"Overhåndsgrep, full strekk i bunnen.",x:"Overhåndsgrep litt bredere enn skuldrene. Start helt utstrakt, trekk deg opp til haka er over stanga med brystet fram, 2 sek ned. Når 10 reps går, ta ned motvekten ett trinn. Mål: egen vekt.",ssA:true},
+  {n:"Skulderpress",eq:"maskin",s:3,r:"8–12",rir:"1",h:"",c:"Fremre skulder. Ikke svai.",x:"Still setet så håndtakene er i skulderhøyde. Ryggen inntil ryggstøtten, press rett opp til armene nesten er strake, 2 sek ned til håndtakene er ved skuldrene.",ssB:true},
+  {n:"Kabelroing, sittende",eq:"kabel, V-håndtak",s:3,r:"10–12",rir:"1",h:"75 sek etter paret",c:"Strekk fram, klem bak.",x:"La armene og skulderbladene gå helt fram i strekk. Trekk håndtaket mot magen med albuene langs kroppen og klem skulderbladene sammen i 1 sek. Overkroppen står stille.",ssA:true,grow:true},
+  {n:"Pec deck",eq:"maskin",s:3,r:"10–15",rir:"0–1",h:"",c:"Bryst i full strekk.",x:"Still setet så håndtakene er i brysthøyde. Lett bøy i albuene, la armene gå bakover til du kjenner godt strekk i brystet, før dem sammen foran deg og klem 1 sek.",ssB:true},
+  {n:"Sidehev, kabel i hoftehøyde",eq:"kabel, håndtak",s:4,r:"12–15",rir:"0–1",h:"45 sek etter paret",c:"Som i A.",x:"Samme som i økt A: kabel i hoftehøyde, stå sidelengs, led med albuen til skulderhøyde, 2–3 sek ned.",ssA:true,grow:true},
+  {n:"Omvendt pec deck",eq:"maskin",s:3,r:"15–20",rir:"0–1",h:"",c:"Bakre skulder og holdning.",x:"Sitt med brystet mot puta. Før armene bakover i en bue til de er på linje med kroppen, tommelen ned. Tenk bredt, ikke klem skulderbladene sammen.",ssB:true},
+  {n:"Bicepscurl, enarms kabel",eq:"kabel i hoftehøyde, bak kroppen",s:3,r:"10–12",rir:"0–1",h:"45 sek etter paret",c:"Biceps i full strekk.",x:"Kabelen i hoftehøyde bak deg. Gå et skritt fram så armen er strukket litt bak kroppen. Bøy albuen og curl håndtaket mot skulderen uten at albuen går fram, 2 sek ned til full strekk. Begge armer.",ssA:true},
+  {n:"Triceps over hodet",eq:"kabel, tau",s:3,r:"10–12",rir:"0–1",h:"",c:"Lange hodet i strekk.",x:"Snu ryggen til kabelen med tauet over hodet. Albuene peker fram og står stille. Senk tauet bak hodet til full strekk, press fram og opp til armene er strake.",ssB:true},
+  {n:"Dead bug",eq:"gulv",s:3,r:"8/side",rir:"2",h:"45 sek etter paret",c:"Korsryggen i gulvet.",x:"Ligg på ryggen med armene rett opp og knærne i 90°. Press korsryggen ned i gulvet og pust ut. Senk motsatt arm og bein sakte mot gulvet uten at ryggen løfter seg, tilbake og bytt side.",ssA:true},
+  {n:"Omvendt crunch",eq:"benk",s:3,r:"10–15",rir:"1",h:"",c:"Nedre mage.",x:"Ligg på benken og hold rundt den bak hodet. Knærne bøyd. Rull bekkenet opp mot brystet så setet løfter seg fra benken, ikke sving beina. 2 sek ned.",ssB:true}]},
+ C:{title:"Styrke C · lette bein, sete + overkropp", when:"Fredag, dagen før lørdagens terskel. Beina lett, 3 i reserve. Ca. 55 min.", wu:"Ekstra for C: 2 × 10 sek lette hopp på stedet før spensten.", ex:[
+  {n:"Pogohopp",eq:"gulv",s:3,r:"15",rir:"–",h:"60 sek",c:"Stive ankler, rask kontakt.",x:"Hopp lett på stedet med nesten strake knær og stive ankler. Kort bakkekontakt, som en sprett. Kort og lett, det skal ikke bli slitsomt."},
+  {n:"Bulgarsk utfall",eq:"manualer",s:2,r:"8/bein",rir:"3",h:"90 sek",c:"Lett i dag.",x:"Bakerste fot på benken, fremste fot langt nok fram til at kneet ikke går langt forbi tærne. Senk rett ned, len overkroppen litt fram for mer sete. Svakeste bein først.",},
+  {n:"Hofteekstensjon, ett bein",eq:"benk",s:3,r:"10–15/bein",rir:"1–2",h:"60 sek etter paret",c:"Setet. Klem 1 sek på toppen.",x:"Skulderbladene mot benken, en fot i gulvet og det andre beinet løftet. Senk hoften mot gulvet og press opp gjennom hælen til hofta er strak, klem setet 1 sek. Haka inn, ikke svai.",ssA:true},
+  {n:"Roing, enarms maskin",eq:"maskin med brystsstøtte",s:3,r:"10–12/arm",rir:"1",h:"",c:"Brystet mot puta, full strekk.",x:"Brystet mot støtten. La armen gå helt fram så skulderbladet følger med, trekk albuen bakover langs kroppen, 1 sek klem. Begge armer.",ssB:true,grow:true},
+  {n:"Skråbenk Smith, 30°",eq:"Smith",s:3,r:"8–12",rir:"1",h:"60 sek etter paret",c:"Andre brystdag, flere reps enn i A.",x:"Som i A, men lettere og med flere reps. Stanga til øvre bryst, 2 sek ned.",ssA:true},
+  {n:"Sidehev, kabel i hoftehøyde",eq:"kabel, håndtak",s:4,r:"12–15",rir:"0–1",h:"",c:"Som i A og B.",x:"Samme som i økt A: kabel i hoftehøyde, stå sidelengs, led med albuen til skulderhøyde, 2–3 sek ned.",ssB:true,grow:true},
+  {n:"Abhjul, knestående",eq:"abhjul",s:3,r:"8–12",rir:"1–2",h:"45 sek etter paret",c:"Ribbeina ned, ikke svai.",x:"På knærne med hjulet under skuldrene. Rull fram så langt du klarer uten at korsryggen svaier, hold ribbeina ned og trekk tilbake med magen.",ssA:true},
+  {n:"Pallof-press",eq:"kabel",s:3,r:"10/side",rir:"2",h:"",c:"Hoftene stille.",x:"Stå sidelengs til kabelen i brysthøyde, håndtaket mot brystet. Press armene rett fram og hold 2 sek uten at kroppen roterer mot kabelen.",ssB:true}]}
 };
 
 // løping blokk 1
@@ -552,7 +568,7 @@ function renderSession(){
       '<input type="checkbox" id="'+id+'" data-i="'+i+'"'+(done?' checked':'')+' aria-label="Ferdig: '+e.n+'">'+
       '<label for="'+id+'"><div>'+(e.ssA?'<span class="ss-tag">Supersett med neste · </span>':'')+(e.ssB?'<span class="ss-tag">Supersett · </span>':'')+'<span class="name">'+e.n+'</span></div>'+
       '<div class="rx num"><span><b>'+sets+extra+' × '+e.r+'</b></span><span>RIR '+e.rir+'</span>'+(e.h?'<span>Hvile '+e.h+'</span>':'')+'<span>'+e.eq+'</span></div>'+
-      '<p class="cue">'+e.c+'</p></label></div>';
+      '<p class="cue">'+e.c+'</p></label>'+(e.x?'<details class="how"><summary>Slik gjør du den</summary><p>'+e.x+'</p></details>':'')+'</div>';
   });
   html += '<p class="foot" style="margin:10px 0 0">Avkrysningen lagres bare på denne telefonen, og nullstilles hver dag. Vekter og reps føres i Excel-arket.</p>';
   const box = document.getElementById("session"); box.innerHTML = html;
