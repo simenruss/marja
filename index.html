@@ -80,12 +80,37 @@ h2.sec{font-size:28px;text-transform:uppercase;font-weight:700}
 .wu{background:var(--teal-soft);border-radius:10px;padding:10px 12px;margin:10px 0 4px;font-size:15px}
 .ex{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
 .ex:first-of-type{border-top:0}
-.ex input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--accent)}
+.ex > input[type=checkbox]{width:22px;height:22px;margin:2px 0 0;accent-color:var(--accent)}
 .ex .name{font-weight:700}
 .ex .rx{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:14px;color:var(--muted);margin:2px 0}
 .ex .rx b{color:var(--ink);font-weight:700}
 .ex .cue{font-size:15px;margin:0}
 .ex.ss{border-top:1px dashed var(--line)}
+.lg{grid-column:2;display:grid;gap:6px;margin-top:6px;padding:8px 10px;background:var(--bg);border-radius:10px}
+.lg .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lg label.k{font-size:13px;color:var(--muted);font-weight:600}
+.in{font:inherit;font-size:16px;width:50px;padding:6px 6px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums}
+.in.w{width:68px}
+.in.wide{width:100%}
+.in:focus{outline:2px solid var(--accent);outline-offset:1px}
+.lg .last{font-size:13px;color:var(--muted)}
+.lg .sug{font-size:13px;font-weight:700;color:var(--teal)}
+.lg .sug.up{color:var(--accent-ink)}
+.saved{font-size:12px;color:var(--teal);font-weight:600}
+.cd{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.cd .t{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.cd .t.race{border-left:4px solid var(--accent)}
+.cd .big{font-family:var(--display);font-size:30px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.cd .lbl{font-family:var(--display);font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
+.cd .sub{font-size:13px;color:var(--muted)}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:8px}
+.form label{display:grid;gap:3px;font-size:13px;color:var(--muted);font-weight:600}
+.form .in{width:100%}
+.list2{display:grid;gap:0;margin-top:8px}
+.list2 .it{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.list2 .it:first-child{border-top:0}
+.x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:18px;padding:0 4px}
+.btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .how{grid-column:2;font-size:14px;color:var(--muted)}
 .how summary{cursor:pointer;color:var(--teal);font-weight:600}
 .how p{margin:4px 0 0}
@@ -134,11 +159,11 @@ a.ext{color:var(--teal)}
   <div class="eyebrow">Marja Jernsletten · 36 år · 160 cm · 54,5 kg</div>
   <h1>Trent, slank og under 40</h1>
   <p>Fram til Sentrumsløpet: fire løpeturer med tre intervalløkter, og tre styrkeøkter på de andre dagene. Etter 24. april bygges volumet mot halvmaraton.</p>
-  <div class="goals">
-    <div class="goal"><b>Atletisk</b><span>Se trent, slank og atletisk ut</span></div>
-    <div class="goal race"><b class="num">10 km under 40</b><span>Sentrumsløpet 24. april · <span id="cd-sl"></span></span></div>
-    <div class="goal race"><b class="num">HM under 1:30</b><span>Etter Sentrumsløpet · Oslo Halvmaraton · <span id="cd-hm"></span></span></div>
-    <div class="goal"><b>Fett og mage</b><span>Lavere fettprosent og nedre mage</span></div>
+  <div class="cd" id="cd">
+    <div class="t race"><span class="lbl">Sentrumsløpet</span><span class="big" id="cd-sl">–</span><span class="sub">24. april · mål under 40</span></div>
+    <div class="t race"><span class="lbl">Halvmaraton</span><span class="big" id="cd-hm">–</span><span class="sub">11. sept · mål under 1:30</span></div>
+    <div class="t"><span class="lbl">Vekt</span><span class="big" id="cd-w">–</span><span class="sub" id="cd-w2"></span></div>
+    <div class="t"><span class="lbl">Fett, anslått</span><span class="big" id="cd-f">–</span><span class="sub" id="cd-f2"></span></div>
   </div>
 </header>
 
@@ -146,6 +171,7 @@ a.ext{color:var(--teal)}
   <a href="#uka">Uka</a>
   <a href="#styrke">Styrke</a>
   <a href="#loping">Løping</a>
+  <a href="#logg">Logg</a>
   <a href="#tester">Tester</a>
   <a href="#rammer">Rammer</a>
   <a href="#hvorfor">Hvorfor</a>
@@ -180,12 +206,12 @@ a.ext{color:var(--teal)}
     <summary style="cursor:pointer;font-family:var(--display);font-size:20px;font-weight:700;text-transform:uppercase">Slik gjennomføres en økt</summary>
     <ol class="steps">
       <li><b>Oppvarming, 5 min.</b> Sykkel eller romaskin, så én runde med lette øvelser. Står øverst i hver økt.</li>
-      <li><b>Startvekt</b> står i Excel-arket under «Startvekter». Første gang: kjenn etter, og juster ett trinn om toppen av spennet ikke gir riktig reserve.</li>
+      <li><b>Startvekt:</b> når testløftene er ført inn under Tester, viser øvelsen en foreslått startvekt. For resten finner hun vekta i første økt. Juster ett trinn om toppen av spennet ikke gir riktig reserve.</li>
       <li><b>Supersett:</b> still opp begge apparatene. Ta ett sett av første øvelse, gå rett til andre, hvil tiden som står, og gjenta. Slik holdes økta under en time.</li>
       <li><b>RIR er reps i reserve:</b> hvor mange flere du kunne tatt med god teknikk. RIR 2 betyr stopp når du har to igjen. RIR 0 betyr at neste rep ikke ville gått.</li>
       <li><b>Tempo:</b> 2–3 sek ned, kort stopp i strekk, kontrollert opp. Muskelen skal jobbe gjennom hele bevegelsen, ikke vekta svinge.</li>
       <li><b>Progresjon:</b> når alle sett når toppen av spennet, går vekta opp ett trinn neste gang. Reps faller da litt, og du bygger opp igjen.</li>
-      <li><b>Logg</b> vekt og reps i Excel-arket rett etter økta, og kryss av øvelsene her underveis.</li>
+      <li><b>Logg</b> kg og reps i feltene under hver øvelse etter hvert sett. Neste gang viser øvelsen hva hun gjorde sist, og om vekta skal opp.</li>
     </ol>
   </details>
   <div class="card" id="session"></div>
@@ -193,7 +219,7 @@ a.ext{color:var(--teal)}
     <div class="card">
       <h3 style="font-size:20px;text-transform:uppercase">Progresjon</h3>
       <ol class="list" style="margin-top:8px;font-size:15px">
-        <li><b>Toppen av spennet på alle sett</b> gir ett trinn opp neste gang: 2,5 kg på stang, 1–2 kg på manual. Excel-arket sier fra.</li>
+        <li><b>Toppen av spennet på alle sett</b> gir ett trinn opp neste gang: 2,5 kg på stang, 1–2 kg på manual. Loggen sier fra.</li>
         <li><b>Bein aldri til failure.</b> 2 i reserve i A, 3 i reserve i C. Siste sett på isolasjon for overkroppen kan gå til 0.</li>
         <li><b>Uke 3–5:</b> +1 sett på sidehev, nedtrekk og roing hvis søvnen holder. Vises i oransje.</li>
         <li><b>Tunge uker i A:</b> i uke 1, 3 og 5 er beinpress 4 × 4–6 med 2 i reserve og 3 min pause. Det gir mest effekt på løpssteget. I uke 2 og 4 er det 3 × 8–12 for muskelvekst. Tunge uker legges i terskelukene, så hun aldri har tunge bein og to harde intervaller i samme uke.</li>
@@ -251,6 +277,61 @@ a.ext{color:var(--teal)}
   </div>
 </section>
 
+<!-- LOGG -->
+<section class="view" id="v-logg" aria-labelledby="h-logg">
+  <h2 class="sec" id="h-logg">Logg</h2>
+  <p class="lead">Løpeturer og kroppsmål føres her. Styrkeøktene logges rett på øvelsene under Styrke. Alt lagres i nettleseren på denne telefonen. Ta en sikkerhetskopi av og til.</p>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Løpetur</h3>
+    <div class="form">
+      <label>Dato<input class="in" type="date" id="r-date"></label>
+      <label>Type<select class="in" id="r-type"><option>Terskel</option><option>Hard</option><option>10 km-fart</option><option>Langtur</option><option>Rolig</option><option>Løp</option></select></label>
+      <label>Km<input class="in" inputmode="decimal" id="r-km" placeholder="9,5"></label>
+      <label>Tid (t:mm:ss)<input class="in" id="r-time" placeholder="0:52:30"></label>
+      <label>Snittpuls<input class="in" inputmode="numeric" id="r-hr" placeholder="152"></label>
+      <label>Anstrengelse 1–10<input class="in" inputmode="numeric" id="r-rpe" placeholder="7"></label>
+    </div>
+    <label style="display:grid;gap:3px;font-size:13px;color:var(--muted);font-weight:600;margin-top:8px">Økta og dragene<input class="in wide" id="r-note" placeholder="6 × 800 m: 3:20, 3:19, 3:18, 3:18, 3:17, 3:16"></label>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button class="btn pri" id="r-save">Lagre tur</button><span class="saved" id="r-msg"></span></div>
+    <div class="list2" id="r-sum"></div>
+    <div class="list2" id="r-list"></div>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Kropp</h3>
+    <p class="foot" style="margin:6px 0 0">Mål om morgenen, før mat. Fettprosenten anslås fra midje, hofte og nakke (US Navy-metoden), og er et anslag på ± 3–4 prosentpoeng. Trenden er det som teller. Har hun en body scan, brukes den i stedet.</p>
+    <div class="form">
+      <label>Dato<input class="in" type="date" id="b-date"></label>
+      <label>Vekt (kg)<input class="in" inputmode="decimal" id="b-w" placeholder="54,5"></label>
+      <label>Midje, ved navlen (cm)<input class="in" inputmode="decimal" id="b-waist"></label>
+      <label>Hofte, bredeste (cm)<input class="in" inputmode="decimal" id="b-hip"></label>
+      <label>Nakke (cm)<input class="in" inputmode="decimal" id="b-neck"></label>
+      <label>Nedre mage (cm)<input class="in" inputmode="decimal" id="b-low"></label>
+      <label>Body scan, fett %<input class="in" inputmode="decimal" id="b-scan"></label>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button class="btn pri" id="b-save">Lagre måling</button><span class="saved" id="b-msg"></span></div>
+    <div class="list2" id="b-list"></div>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Mål</h3>
+    <div class="form">
+      <label>Målvekt (kg)<input class="in" inputmode="decimal" id="g-w"></label>
+      <label>Mål fett %<input class="in" inputmode="decimal" id="g-f"></label>
+    </div>
+    <p class="foot" style="margin:6px 0 0">Forslaget er 54,5 kg og 20 %: hold vekta og la fettprosenten gå ned med mer muskel. Endre tallene om hun vil. Går vekta ned mer enn 0,5 kg i uka, viser nedtellingen et varsel. Da er det for lite mat for treningen.</p>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Sikkerhetskopi</h3>
+    <p class="foot" style="margin:6px 0 0">Data ligger bare i denne nettleseren. Sletter hun nettleserdata, forsvinner loggen. Kopier eller last ned en kopi en gang i måneden, og lim den inn her for å gjenopprette eller flytte til ny telefon.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+      <button class="btn" id="bk-copy">Kopier data</button>
+      <button class="btn" id="bk-dl">Last ned fil</button>
+      <span class="saved" id="bk-msg"></span>
+    </div>
+    <textarea class="in wide" id="bk-in" rows="3" style="margin-top:8px" placeholder="Lim inn kopien her for å gjenopprette"></textarea>
+    <div style="margin-top:8px"><button class="btn" id="bk-restore">Gjenopprett fra kopi</button></div>
+  </div>
+</section>
+
 <!-- TESTER -->
 <section class="view" id="v-tester" aria-labelledby="h-tester">
   <h2 class="sec" id="h-tester">Tester</h2>
@@ -263,7 +344,7 @@ a.ext{color:var(--teal)}
   <div class="card">
     <h3 style="font-size:20px;text-transform:uppercase">Styrketesten, steg for steg · ca. 60 min</h3>
     <p style="margin:8px 0;font-size:15px"><b>Målet</b> er å finne hvor sterk hun er i fem løft, så startvektene i programmet blir riktige fra første økt. Testen gjentas hver 6. uke, og da viser den fremgangen.</p>
-    <p style="margin:8px 0;font-size:15px"><b>Før testen:</b> ingen tung trening dagen før, vanlig måltid 2–3 timer før, og Excel-arket eller et notat klart på telefonen.</p>
+    <p style="margin:8px 0;font-size:15px"><b>Før testen:</b> ingen tung trening dagen før, vanlig måltid 2–3 timer før, og denne siden åpen på telefonen.</p>
     <p style="margin:8px 0;font-size:15px"><b>To ord:</b> Et <b>rent rep</b> er full bevegelse, kontrollert, uten å jukse eller svinge. <b>Tyngste rene 8</b> er den tyngste vekta der hun klarer 8 rene reps, og der et niende ikke ville gått, eller bare så vidt.</p>
     <ol class="steps">
       <li><b>Oppvarming, 10 min.</b> 5 min sykkel eller romaskin, så to runder med 10 knebøy med egen vekt, 10 hoftebøy, 10 armhevinger på benk og 15 strikk-trekk.</li>
@@ -291,13 +372,22 @@ a.ext{color:var(--teal)}
     </table></div>
   </div>
   <div class="card">
-    <h3 style="font-size:20px;text-transform:uppercase">Slik logges testen i Excel</h3>
-    <ol class="steps">
-      <li><b>Fanen «Tester», raden «Test 0»:</b> dato, vekt og omkretser. For beinpress, nedtrekk og skulderpress fyller hun inn kg, reps og RIR. Hang-ups og stille lengde har egne kolonner. Arket regner ut estimert maks (e1RM) for hvert løft.</li>
-      <li><b>Fanen «Startvekter»:</b> de samme tallene for beinpress, rumensk markløft, nedtrekk og skulderpress, og motvekten for hang-ups. Kolonnen «Startvekt» viser vekta hun skal bruke i programmet.</li>
-      <li><b>Resten av øvelsene</b> testes ikke. I første økt i uke 1 finner hun vekta der toppen av spennet gir 1–2 i reserve, og fører den inn i «Startvekter» etterpå.</li>
-    </ol>
-    <p class="foot" style="margin:8px 0 0">Eksempel: Beinpress 120 kg × 8 med 1 i reserve gir en estimert maks på 156 kg. For 12 reps med 2 i reserve blir startvekta rundt 105 kg.</p>
+    <h3 style="font-size:20px;text-transform:uppercase">Før inn testen</h3>
+    <p style="margin:8px 0;font-size:15px">Skriv inn vekt, reps og RIR for hvert løft. Siden regner ut estimert maks, og foreslår startvekt på øvelsene i programmet. Siste test brukes.</p>
+    <div class="form" id="t-form">
+      <label>Dato<input class="in" type="date" id="t-date"></label>
+    </div>
+    <div class="scroll"><table style="margin-top:8px" id="t-table">
+      <tr><th>Løft</th><th class="n">Kg</th><th class="n">Reps</th><th class="n">RIR</th><th class="n">Est. maks</th></tr>
+    </table></div>
+    <div class="form">
+      <label>Hang-ups, reps egen vekt<input class="in" inputmode="numeric" id="t-hu"></label>
+      <label>Eller motvekt for 6 (kg)<input class="in" inputmode="decimal" id="t-hum"></label>
+      <label>Stille lengde (cm)<input class="in" inputmode="numeric" id="t-sl"></label>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button class="btn pri" id="t-save">Lagre test</button><span class="saved" id="t-msg"></span></div>
+    <div class="list2" id="t-list"></div>
+    <p class="foot" style="margin:8px 0 0">Eksempel: Beinpress 120 kg × 8 med 1 i reserve gir en estimert maks på 156 kg, og en startvekt på rundt 105 kg for 12 reps med 2 i reserve.</p>
   </div>
   <div class="grid2">
     <div class="card">
@@ -432,8 +522,138 @@ const today = new Date(); today.setHours(0,0,0,0);
 
 // nedtelling
 function days(to){ return Math.max(0, Math.round((to - today)/DAYMS)); }
-document.getElementById("cd-hm").textContent = days(new Date(2027,8,11))+" dager";
-document.getElementById("cd-sl").textContent = days(new Date(2027,3,24))+" dager";
+// (nedtelling tegnes i renderCd)
+
+// ---------- logg ----------
+const LKEY = "marja-logg-v1";
+const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const TODAY = iso(today);
+function loadLog(){ try{ const t = window.localStorage.getItem(LKEY); if(t){ const o = JSON.parse(t); return Object.assign({lifts:{},runs:[],body:[],tests:[],goal:{w:54.5,f:20}}, o); } }catch(e){} return {lifts:{},runs:[],body:[],tests:[],goal:{w:54.5,f:20}}; }
+let LOG = loadLog();
+function saveLog(){ try{ window.localStorage.setItem(LKEY, JSON.stringify(LOG)); return true; }catch(e){ return false; } }
+const num = v => { if(v===undefined||v===null) return NaN; const n = parseFloat(String(v).replace(",", ".")); return isNaN(n)?NaN:n; };
+const fmt1 = n => (Math.round(n*10)/10).toString().replace(".", ",");
+const esc = t => String(t).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function range(r){ const m = String(r).match(/(\d+)\D+(\d+)/); if(m) return [+m[1], +m[2]]; const k = String(r).match(/(\d+)/); return k?[+k[1],+k[1]]:[0,0]; }
+function lastLift(sess, name){
+  let best = null;
+  Object.keys(LOG.lifts).forEach(k=>{ const [d,ss,n] = k.split("|"); if(ss===sess && n===name && d<TODAY && (!best || d>best.d)) best = {d, v:LOG.lifts[k]}; });
+  return best;
+}
+const TESTMAP = {"Beinpress":["bp",5],"Rumensk markløft":["rdl",2.5],"Nedtrekk, smalt grep":["nt",2.5],"Skulderpress":["sp",2.5]};
+const TESTS = [["bp","Beinpress"],["rdl","Rumensk markløft"],["nt","Nedtrekk, smalt grep"],["sp","Skulderpress, maskin"]];
+function e1rm(t){ const w=num(t.kg), r=num(t.reps), q=num(t.rir)||0; return (w>0&&r>0)? w*(1+(r+q)/30) : NaN; }
+function startFor(name, reps, rirTxt){
+  const m = TESTMAP[name]; if(!m || !LOG.tests.length) return null;
+  const t = LOG.tests[LOG.tests.length-1][m[0]]; if(!t) return null;
+  const e = e1rm(t); if(isNaN(e)) return null;
+  const top = range(reps)[1]; const q = range(rirTxt)[0];
+  return Math.floor(e/(1+(top+q)/30)/m[1])*m[1];
+}
+function logRow(sess, e, n, reps, i){
+  const k = TODAY+"|"+sess+"|"+e.n; const cur = LOG.lifts[k] || {kg:"", reps:[]};
+  const last = lastLift(sess, e.n);
+  const [lo, hi] = range(reps);
+  let info = "";
+  if (last){
+    const r = last.v.reps.filter(x=>x!==""&&x!=null);
+    info = '<span class="last">Sist '+last.d.slice(8,10)+"."+last.d.slice(5,7)+": "+esc(last.v.kg||"–")+" kg × "+(r.join(", ")||"–")+'</span>';
+    const nums = r.map(Number).filter(x=>!isNaN(x));
+    if (nums.length && Math.min.apply(null, nums) >= hi) info += ' <span class="sug up">Øk vekta ett trinn i dag</span>';
+    else if (nums.length && Math.min.apply(null, nums) < lo) info += ' <span class="sug">Hold vekta, eller ett trinn ned</span>';
+    else if (nums.length) info += ' <span class="sug">Samme vekt, flere reps</span>';
+  } else {
+    const st = startFor(e.n, reps, e.rir);
+    info = st ? '<span class="sug">Startvekt fra testen: '+fmt1(st)+' kg</span>' : '<span class="last">Første gang: finn vekta der toppen av spennet gir riktig reserve.</span>';
+  }
+  let inputs = '<input class="in w" id="kg-'+i+'" data-f="kg" inputmode="decimal" aria-label="Kg" placeholder="kg" value="'+esc(cur.kg||"")+'">';
+  for (let j=0;j<n;j++) inputs += '<input class="in" data-f="r'+j+'" inputmode="numeric" aria-label="Reps sett '+(j+1)+'" placeholder="reps" value="'+esc(cur.reps[j]||"")+'">';
+  return '<div class="lg" data-k="'+esc(k)+'" data-n="'+n+'"><div class="row">'+inputs+'</div><div>'+info+' <span class="saved"></span></div></div>';
+}
+function saveLift(box){
+  const k = box.dataset.k, n = +box.dataset.n;
+  const v = {kg: box.querySelector('[data-f="kg"]').value.trim(), reps: []};
+  for (let j=0;j<n;j++) v.reps.push(box.querySelector('[data-f="r'+j+'"]').value.trim());
+  LOG.lifts[k] = v; const ok = saveLog();
+  const sv = box.querySelector(".saved"); if (sv) sv.textContent = ok ? "Lagret" : "Kunne ikke lagre";
+}
+function navy(b){ const w=num(b.waist), h=num(b.hip), n=num(b.neck); if(!(w>0&&h>0&&n>0)||w+h-n<=0) return NaN; return 495/(1.29579 - 0.35004*Math.log10(w+h-n) + 0.22100*Math.log10(160)) - 450; }
+function fatOf(b){ const sc = num(b.scan); return sc>0 ? sc : navy(b); }
+function renderCd(){
+  const dl = days(new Date(2027,3,24)), dh = days(new Date(2027,8,11));
+  document.getElementById("cd-sl").textContent = dl+" dager";
+  document.getElementById("cd-hm").textContent = dh+" dager";
+  const bs = LOG.body.slice().sort((a,b)=>a.date<b.date?-1:1);
+  const ws = bs.filter(b=>num(b.w)>0);
+  const gw = num(LOG.goal.w), gf = num(LOG.goal.f);
+  const curW = ws.length ? num(ws[ws.length-1].w) : 54.5;
+  document.getElementById("cd-w").textContent = fmt1(curW)+" kg";
+  let wtxt = (ws.length ? "" : "Fra start. ") + (gw>0 ? (Math.abs(curW-gw)<0.25 ? "På målet, "+fmt1(gw)+" kg" : fmt1(Math.abs(curW-gw))+" kg "+(curW>gw?"igjen ned":"igjen opp")+" til "+fmt1(gw)) : "Sett mål under Logg");
+  if (ws.length>=2){ const a=ws[ws.length-2], b=ws[ws.length-1]; const dd=(new Date(b.date)-new Date(a.date))/DAYMS; if(dd>0 && (num(a.w)-num(b.w))/dd*7>0.5) wtxt = "Ned over 0,5 kg i uka. Spis mer."; }
+  document.getElementById("cd-w2").textContent = wtxt;
+  const fs = bs.filter(b=>!isNaN(fatOf(b)));
+  if (fs.length){ const f = fatOf(fs[fs.length-1]); document.getElementById("cd-f").textContent = fmt1(f)+" %";
+    document.getElementById("cd-f2").textContent = gf>0 ? (f<=gf ? "På målet, "+fmt1(gf)+" %" : fmt1(f-gf)+" prosentpoeng igjen til "+fmt1(gf)+" %") : "Sett mål under Logg"; }
+  else { document.getElementById("cd-f").textContent = "–"; document.getElementById("cd-f2").textContent = "Mål midje, hofte og nakke under Logg"; }
+}
+function parseTime(t){ const p = String(t).trim().split(":").map(Number); if(p.some(isNaN)||!p.length) return NaN; return p.length===3? p[0]*3600+p[1]*60+p[2] : p.length===2? p[0]*60+p[1] : p[0]*60; }
+const mmss = sec => Math.floor(sec/60)+":"+String(Math.round(sec%60)).padStart(2,"0");
+function renderRuns(){
+  const rs = LOG.runs.slice().sort((a,b)=>a.date<b.date?1:-1);
+  const wk = d => Math.floor((new Date(d) - START)/DAYMS/7)+1;
+  const tw = weekOf(today);
+  const km = w => LOG.runs.filter(r=>wk(r.date)===w).reduce((s,r)=>s+(num(r.km)||0),0);
+  document.getElementById("r-sum").innerHTML = '<div class="it"><span>Denne uka</span><b class="num">'+fmt1(km(tw))+' km</b></div><div class="it"><span>Forrige uke</span><b class="num">'+fmt1(km(tw-1))+' km</b></div>';
+  document.getElementById("r-list").innerHTML = rs.slice(0,15).map(r=>{ const sec=parseTime(r.time), k=num(r.km); const pace = (sec>0&&k>0)? mmss(sec/k)+"/km" : "";
+    return '<div class="it"><span><b>'+r.date.slice(8,10)+"."+r.date.slice(5,7)+" · "+esc(r.type)+'</b> '+esc(r.km||"")+' km '+esc(r.time||"")+(pace?' · '+pace:'')+(r.hr?' · '+esc(r.hr)+' slag':'')+(r.note?'<br><span class="foot">'+esc(r.note)+'</span>':'')+'</span><button class="x" data-del="'+LOG.runs.indexOf(r)+'" aria-label="Slett tur">×</button></div>'; }).join("") || '<p class="foot">Ingen turer logget ennå.</p>';
+  document.querySelectorAll("#r-list [data-del]").forEach(b=>b.onclick=()=>{ LOG.runs.splice(+b.dataset.del,1); saveLog(); renderRuns(); });
+}
+function renderBody(){
+  const bs = LOG.body.slice().sort((a,b)=>a.date<b.date?1:-1);
+  document.getElementById("b-list").innerHTML = bs.slice(0,12).map(b=>{ const f=fatOf(b);
+    return '<div class="it"><span><b>'+b.date.slice(8,10)+"."+b.date.slice(5,7)+'</b> '+(b.w?esc(b.w)+' kg':'')+(b.waist?' · midje '+esc(b.waist):'')+(b.low?' · nedre mage '+esc(b.low):'')+(!isNaN(f)?' · fett '+fmt1(f)+' %':'')+'</span><button class="x" data-del="'+LOG.body.indexOf(b)+'" aria-label="Slett måling">×</button></div>'; }).join("") || '<p class="foot">Ingen målinger ennå.</p>';
+  document.querySelectorAll("#b-list [data-del]").forEach(b=>b.onclick=()=>{ LOG.body.splice(+b.dataset.del,1); saveLog(); renderBody(); renderCd(); });
+}
+function renderTests(){
+  const tb = document.getElementById("t-table");
+  tb.innerHTML = '<tr><th>Løft</th><th class="n">Kg</th><th class="n">Reps</th><th class="n">RIR</th><th class="n">Est. maks</th></tr>' + TESTS.map(([id,nm])=>
+    '<tr><td>'+nm+'</td><td><input class="in" inputmode="decimal" id="t-'+id+'-kg"></td><td><input class="in" inputmode="numeric" id="t-'+id+'-reps"></td><td><input class="in" inputmode="numeric" id="t-'+id+'-rir"></td><td class="n" id="t-'+id+'-e">–</td></tr>').join("");
+  TESTS.forEach(([id])=>["kg","reps","rir"].forEach(f=>document.getElementById("t-"+id+"-"+f).addEventListener("input",()=>{ const e=e1rm({kg:document.getElementById("t-"+id+"-kg").value,reps:document.getElementById("t-"+id+"-reps").value,rir:document.getElementById("t-"+id+"-rir").value}); document.getElementById("t-"+id+"-e").textContent = isNaN(e)?"–":fmt1(e)+" kg"; })));
+  const L = document.getElementById("t-list");
+  L.innerHTML = LOG.tests.slice().reverse().map(t=>'<div class="it"><span><b>'+t.date.slice(8,10)+"."+t.date.slice(5,7)+"."+t.date.slice(0,4)+'</b> '+TESTS.map(([id,nm])=>t[id]&&t[id].kg?nm.split(",")[0]+" "+esc(t[id].kg)+"×"+esc(t[id].reps):"").filter(Boolean).join(" · ")+(t.hu?' · hang-ups '+esc(t.hu):'')+(t.hum?' · motvekt '+esc(t.hum)+' kg':'')+(t.sl?' · lengde '+esc(t.sl)+' cm':'')+'</span><button class="x" data-del="'+LOG.tests.indexOf(t)+'" aria-label="Slett test">×</button></div>').join("") || '<p class="foot">Ingen tester ført inn ennå.</p>';
+  L.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{ LOG.tests.splice(+b.dataset.del,1); saveLog(); renderTests(); renderSession(); });
+}
+function flash(id, t){ const el=document.getElementById(id); el.textContent=t; setTimeout(()=>{ el.textContent=""; }, 2500); }
+function initLogUI(){
+  ["r-date","b-date","t-date"].forEach(id=>document.getElementById(id).value = TODAY);
+  document.getElementById("g-w").value = LOG.goal.w!=null ? String(LOG.goal.w).replace(".",",") : "";
+  document.getElementById("g-f").value = LOG.goal.f!=null ? String(LOG.goal.f).replace(".",",") : "";
+  ["g-w","g-f"].forEach(id=>document.getElementById(id).addEventListener("change",()=>{ LOG.goal = {w:num(document.getElementById("g-w").value), f:num(document.getElementById("g-f").value)}; saveLog(); renderCd(); }));
+  document.getElementById("r-save").onclick = ()=>{
+    const v = id=>document.getElementById(id).value.trim();
+    if (!v("r-km") && !v("r-time")) { flash("r-msg","Skriv inn km eller tid"); return; }
+    LOG.runs.push({date:v("r-date")||TODAY,type:v("r-type"),km:v("r-km"),time:v("r-time"),hr:v("r-hr"),rpe:v("r-rpe"),note:v("r-note")});
+    flash("r-msg", saveLog()?"Lagret":"Kunne ikke lagre"); ["r-km","r-time","r-hr","r-rpe","r-note"].forEach(id=>document.getElementById(id).value=""); renderRuns();
+  };
+  document.getElementById("b-save").onclick = ()=>{
+    const v = id=>document.getElementById(id).value.trim();
+    const o = {date:v("b-date")||TODAY,w:v("b-w"),waist:v("b-waist"),hip:v("b-hip"),neck:v("b-neck"),low:v("b-low"),scan:v("b-scan")};
+    if (!o.w && !o.waist && !o.scan) { flash("b-msg","Skriv inn minst vekt eller midje"); return; }
+    LOG.body = LOG.body.filter(b=>b.date!==o.date); LOG.body.push(o);
+    flash("b-msg", saveLog()?"Lagret":"Kunne ikke lagre"); ["b-w","b-waist","b-hip","b-neck","b-low","b-scan"].forEach(id=>document.getElementById(id).value=""); renderBody(); renderCd();
+  };
+  document.getElementById("t-save").onclick = ()=>{
+    const v = id=>document.getElementById(id).value.trim();
+    const t = {date:v("t-date")||TODAY, hu:v("t-hu"), hum:v("t-hum"), sl:v("t-sl")};
+    TESTS.forEach(([id])=>{ t[id] = {kg:v("t-"+id+"-kg"),reps:v("t-"+id+"-reps"),rir:v("t-"+id+"-rir")}; });
+    LOG.tests = LOG.tests.filter(x=>x.date!==t.date); LOG.tests.push(t); LOG.tests.sort((a,b)=>a.date<b.date?-1:1);
+    flash("t-msg", saveLog()?"Lagret. Startvektene vises nå på øvelsene.":"Kunne ikke lagre"); renderTests(); renderSession();
+  };
+  document.getElementById("bk-copy").onclick = async ()=>{ try{ await navigator.clipboard.writeText(JSON.stringify(LOG)); flash("bk-msg","Kopiert. Lim den inn i et notat eller en mail."); }catch(e){ document.getElementById("bk-in").value = JSON.stringify(LOG); flash("bk-msg","Kopier teksten i feltet under."); } };
+  document.getElementById("bk-dl").onclick = ()=>{ try{ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(LOG,null,1)],{type:"application/json"})); a.download="marja-logg-"+TODAY+".json"; document.body.appendChild(a); a.click(); a.remove(); flash("bk-msg","Lastet ned"); }catch(e){ flash("bk-msg","Nedlasting virker ikke her. Bruk Kopier data."); } };
+  document.getElementById("bk-restore").onclick = ()=>{ try{ const o = JSON.parse(document.getElementById("bk-in").value); if(!o || typeof o!=="object" || !o.lifts) throw 0; LOG = Object.assign({lifts:{},runs:[],body:[],tests:[],goal:{w:54.5,f:20}}, o); saveLog(); renderAllLog(); renderSession(); flash("bk-msg","Gjenopprettet"); }catch(e){ flash("bk-msg","Fant ingen gyldig kopi i feltet"); } };
+}
+function renderAllLog(){ renderCd(); renderRuns(); renderBody(); renderTests(); }
 
 // økter
 const S = {
@@ -516,7 +736,7 @@ function planFor(w){
       {k:"rest",t:"Fri",d:""},
       b===3 ? {k:"test",t:"Testløp 5 eller 10 km",d:"Lørdag 13. mars, eller nærmeste løp. Løp på 4:00 per km fra start. Tida føres i Tester og gir nye tempoer.",link:"tester"}
             : {k:"run",t:"Terskel, kort",d:"6 × 3 min, 1 min pause. Halvt volum."},
-      {k:"run",t:"Rolig 40 min",d:"Sone 2. Før testene inn i Excel."}];
+      {k:"run",t:"Rolig 40 min",d:"Sone 2. Før testene inn under Tester."}];
   }
   if (b<=4){
     const r = b===1 ? B1[wb] : null;
@@ -611,10 +831,12 @@ function renderSession(){
       '<input type="checkbox" id="'+id+'" data-i="'+i+'"'+(done?' checked':'')+' aria-label="Ferdig: '+e.n+'">'+
       '<label for="'+id+'"><div>'+(e.ssA?'<span class="ss-tag">Supersett med neste · </span>':'')+(e.ssB?'<span class="ss-tag">Supersett · </span>':'')+'<span class="name">'+e.n+'</span></div>'+
       '<div class="rx num"><span><b>'+(sets===""?reps:sets+extra+' × '+reps)+'</b>'+note+'</span>'+(rir!=="–"?'<span>RIR '+rir+'</span>':'')+(hv?'<span>Hvile '+hv+'</span>':'')+'<span>'+e.eq+'</span></div>'+
-      '<p class="cue">'+e.c+'</p></label>'+(e.x?'<details class="how"><summary>Slik gjør du den</summary><p>'+e.x+'</p></details>':'')+'</div>';
+      '<p class="cue">'+e.c+'</p></label>'+(e.x?'<details class="how"><summary>Slik gjør du den</summary><p>'+e.x+'</p></details>':'')+
+      (e.spenst ? '' : logRow(curSess, e, (typeof sets==="number"?sets:e.s) + (grow && e.grow && !half ? 1 : 0), reps, i))+'</div>';
   });
-  html += '<p class="foot" style="margin:10px 0 0">Avkrysningen lagres bare på denne telefonen, og nullstilles hver dag. Vekter og reps føres i Excel-arket.</p>';
+  html += '<p class="foot" style="margin:10px 0 0">Kg og reps lagres på denne telefonen så snart de skrives inn. Avkrysningen nullstilles hver dag.</p>';
   const box = document.getElementById("session"); box.innerHTML = html;
+  box.querySelectorAll(".lg input").forEach(inp=>inp.addEventListener("change",()=>saveLift(inp.closest(".lg"))));
   box.querySelectorAll("input[type=checkbox]").forEach(cb=>cb.addEventListener("change",()=>{
     const st = store(); if(st){ try{ st.setItem(key(cb.dataset.i), cb.checked?"1":"0"); }catch(e){} }
     cb.closest(".ex").classList.toggle("done", cb.checked);
@@ -632,7 +854,7 @@ document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",(
 })();
 
 // faner
-const VIEWS = ["uka","styrke","loping","tester","rammer","hvorfor"];
+const VIEWS = ["uka","styrke","loping","logg","tester","rammer","hvorfor"];
 function route(){
   let h = (location.hash||"").replace("#","");
   if (VIEWS.indexOf(h)<0) h = "uka";
@@ -640,7 +862,7 @@ function route(){
   document.querySelectorAll("nav.tabs a").forEach(a=>{ if(a.getAttribute("href")==="#"+h) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
 }
 window.addEventListener("hashchange", route);
-renderWeek(); renderSession(); route();
+initLogUI(); renderAllLog(); renderWeek(); renderSession(); route();
 })();
 </script>
 </body>
