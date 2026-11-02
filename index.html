@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marjas treningsprogram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one narrow column like a race-day card, sticky tab bar, today first. */
+:root{
+  --bg:#F2F4F3; --surface:#FFFFFF; --ink:#14202B; --muted:#5B6873; --line:#DCE2E0;
+  --accent:#FF5A1F; --accent-ink:#B83A0B; --teal:#0E7C7B; --teal-soft:#E1F0EF; --accent-soft:#FFE9E0;
+  --run:#0E7C7B; --lift:#14202B; --rest:#9AA6AE; --test:#FF5A1F;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",Helvetica,Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F161C; --surface:#18222A; --ink:#E9EEF0; --muted:#97A4AD; --line:#2A3640;
+    --accent:#FF7A45; --accent-ink:#FF9A70; --teal:#35B3AF; --teal-soft:#16302F; --accent-soft:#3A2018;
+    --run:#35B3AF; --lift:#E9EEF0; --rest:#5E6B74; --test:#FF7A45; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F161C; --surface:#18222A; --ink:#E9EEF0; --muted:#97A4AD; --line:#2A3640;
+  --accent:#FF7A45; --accent-ink:#FF9A70; --teal:#35B3AF; --teal-soft:#16302F; --accent-soft:#3A2018;
+  --run:#35B3AF; --lift:#E9EEF0; --rest:#5E6B74; --test:#FF7A45; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 64px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:.2px}
+.num{font-variant-numeric:tabular-nums}
+header.hero{padding:22px 0 14px;display:grid;gap:12px}
+.eyebrow{font-family:var(--display);text-transform:uppercase;letter-spacing:1.4px;font-size:14px;color:var(--accent-ink);font-weight:600}
+.hero h1{font-size:44px;line-height:.95;font-weight:700;text-transform:uppercase}
+.hero p{margin:0;color:var(--muted);max-width:60ch}
+.goals{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.goal{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.goal b{font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
+.goal span{font-size:13px;color:var(--muted)}
+.goal.race{border-left:4px solid var(--accent)}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding:8px 0;margin:0 -16px;padding-left:16px;padding-right:16px;border-bottom:1px solid var(--line);scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:0 0 auto;font-family:var(--display);font-weight:600;font-size:17px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);text-decoration:none;padding:7px 12px;border-radius:999px}
+nav.tabs a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+nav.tabs a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.view{display:none;padding-top:18px}
+section.view.on{display:grid;gap:16px}
+h2.sec{font-size:28px;text-transform:uppercase;font-weight:700}
+.lead{margin:0;color:var(--muted);max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.weekbar{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.weekbar h3{font-size:24px;white-space:nowrap;font-weight:700;text-transform:uppercase}
+.weekbar .sub{font-size:14px;color:var(--muted)}
+.btn{min-width:44px;font:inherit;font-family:var(--display);font-weight:600;font-size:16px;text-transform:uppercase;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.chip{display:inline-block;font-family:var(--display);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.6px;padding:2px 8px;border-radius:999px;background:var(--teal-soft);color:var(--teal)}
+.chip.test{background:var(--accent-soft);color:var(--accent-ink)}
+.days{display:grid;gap:8px}
+.day{display:grid;grid-template-columns:62px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;position:relative;overflow:hidden}
+.day::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--rest)}
+.day.run::before{background:var(--run)} .day.lift::before{background:var(--lift)} .day.both::before{background:linear-gradient(var(--run) 50%,var(--lift) 50%)} .day.test::before{background:var(--test)}
+.day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.dname{font-family:var(--display);font-weight:700;font-size:22px;line-height:1;text-transform:uppercase}
+.ddate{font-size:13px;color:var(--muted)}
+.dtitle{font-weight:700}
+.ddetail{color:var(--muted);font-size:15px}
+.today-tag{font-family:var(--display);font-size:12px;font-weight:700;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.8px}
+.dlink{color:var(--teal);font-weight:600;text-decoration:none}
+.dlink:hover{text-decoration:underline}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sess-head{display:grid;gap:4px}
+.sess-head h3{font-size:26px;text-transform:uppercase;font-weight:700}
+.wu{background:var(--teal-soft);border-radius:10px;padding:10px 12px;margin:10px 0 4px;font-size:15px}
+.ex{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.ex:first-of-type{border-top:0}
+.ex input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--accent)}
+.ex .name{font-weight:700}
+.ex .rx{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:14px;color:var(--muted);margin:2px 0}
+.ex .rx b{color:var(--ink);font-weight:700}
+.ex .cue{font-size:15px;margin:0}
+.ex.ss{border-top:1px dashed var(--line)}
+.ss-tag{font-family:var(--display);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--teal)}
+.plus{color:var(--accent-ink);font-weight:700}
+.ex.done .name,.ex.done .cue{opacity:.5;text-decoration:line-through}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{font-family:var(--display);text-transform:uppercase;letter-spacing:.6px;font-size:14px;text-align:left;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:2px solid var(--ink)}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n,th.n{white-space:nowrap;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.zone{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:baseline;padding:10px 0;border-top:1px solid var(--line)}
+.zone:first-child{border-top:0}
+.zone .z{font-family:var(--display);font-weight:700;font-size:18px;text-transform:uppercase}
+.zone .p{font-family:var(--display);font-weight:700;font-size:26px;font-variant-numeric:tabular-nums}
+.zone .f{grid-column:1/-1;color:var(--muted);font-size:14px}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 12px 12px 0;padding:12px 14px}
+.callout p{margin:4px 0}
+.list{margin:0;padding-left:20px;display:grid;gap:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rule{display:grid;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
+.rule:first-child{border-top:0}
+.rule b{font-family:var(--display);font-size:18px;text-transform:uppercase}
+.rule span{color:var(--muted);font-size:15px}
+.block{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.block:first-child{border-top:0}
+.block .bn{font-family:var(--display);font-size:34px;font-weight:700;line-height:1;color:var(--accent-ink)}
+.block .when{font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.block p{margin:2px 0;font-size:15px}
+.block.now{background:var(--accent-soft);margin:0 -14px;padding:12px 14px}
+.foot{font-size:13px;color:var(--muted)}
+a.ext{color:var(--teal)}
+@media (max-width:520px){
+  .hero h1{font-size:36px}
+  .grid2{grid-template-columns:1fr}
+  .day{grid-template-columns:52px 1fr}
+}
+@media (prefers-reduced-motion:no-preference){ .day,.btn{transition:border-color .15s} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Marja Jernsletten · 36 år · 160 cm · 54,5 kg</div>
+  <h1>Trent, slank og under 1:30</h1>
+  <p>Fullkropp to ganger i uka, fire løpeturer og fast hviledag søndag. Løpingen styrer uka, og styrken skal aldri spise den.</p>
+  <div class="goals">
+    <div class="goal"><b>Atletisk</b><span>Se trent, slank og atletisk ut</span></div>
+    <div class="goal race"><b class="num">HM under 1:30</b><span>Fra 1:38:28 · Oslo Halvmaraton · <span id="cd-hm"></span></span></div>
+    <div class="goal race"><b class="num">10 km · 41–42</b><span>Sentrumsløpet 24. april · <span id="cd-sl"></span></span></div>
+    <div class="goal"><b>Fett og mage</b><span>Lavere fettprosent og nedre mage</span></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Deler av programmet">
+  <a href="#uka">Uka</a>
+  <a href="#styrke">Styrke</a>
+  <a href="#loping">Løping</a>
+  <a href="#tester">Tester</a>
+  <a href="#rammer">Rammer</a>
+  <a href="#hvorfor">Hvorfor</a>
+</nav>
+
+<!-- UKA -->
+<section class="view" id="v-uka" aria-labelledby="h-uka">
+  <h2 class="sec" id="h-uka">Uka</h2>
+  <div class="card weekbar">
+    <button class="btn" id="prev" aria-label="Forrige uke">‹</button>
+    <div style="text-align:center">
+      <h3 id="wk-title" class="num"></h3>
+      <div class="sub num" id="wk-sub"></div>
+    </div>
+    <button class="btn" id="next" aria-label="Neste uke">›</button>
+  </div>
+  <div id="wk-note"></div>
+  <div class="days" id="days"></div>
+  <p class="foot">Grønn stripe er løping, mørk er styrke, oransje er test, grå er hvile. Ingen dag har to økter. Trykk på en styrkeøkt for å åpne den. <button class="btn" id="to-today" style="font-size:14px;padding:3px 10px">Til i dag</button></p>
+</section>
+
+<!-- STYRKE -->
+<section class="view" id="v-styrke" aria-labelledby="h-styrke">
+  <h2 class="sec" id="h-styrke">Styrke</h2>
+  <p class="lead">To fullkroppsøkter, maks 60 minutter med oppvarming. Supersett holder tiden nede. Overkroppen får mest volum. Beina trenes tungt og kort med 2 reps i reserve, for styrke og løpsøkonomi.</p>
+  <div class="seg" role="group" aria-label="Velg økt">
+    <button class="btn" data-s="A" aria-pressed="true">A · Tir</button>
+    <button class="btn" data-s="C" aria-pressed="false">C · Tor</button>
+  </div>
+  <div class="card" id="session"></div>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="font-size:20px;text-transform:uppercase">Progresjon</h3>
+      <ol class="list" style="margin-top:8px;font-size:15px">
+        <li><b>Toppen av spennet på alle sett</b> gir ett trinn opp neste gang: 2,5 kg på stang, 1–2 kg på manual. Excel-arket sier fra.</li>
+        <li><b>Bein aldri til failure.</b> Alltid 2 i reserve. Siste sett på isolasjon kan gå til 0.</li>
+        <li><b>Uke 3–5:</b> +1 sett på sidehev, nedtrekk og kabelroing hvis søvnen holder. Vises i oransje.</li>
+        <li><b>Uke 6:</b> testuke med halve sett.</li>
+        <li><b>Armer:</b> ingen egne armøvelser. Chins, roing og press gir nok til armene med to økter.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3 style="font-size:20px;text-transform:uppercase">Sett per uke</h3>
+      <table style="margin-top:6px;font-size:14px">
+        <tr><td>Sidedeltoid</td><td class="n">8 → 10</td></tr>
+        <tr><td>Rygg</td><td class="n">12 → 14</td></tr>
+        <tr><td>Bryst · skulderpress</td><td class="n">3 · 3</td></tr>
+        <tr><td>Biceps · triceps</td><td class="n">via drag og press</td></tr>
+        <tr><td>Quad · bakside og sete</td><td class="n">6 · 9</td></tr>
+        <tr><td>Legg + spenst</td><td class="n">3 + 6</td></tr>
+        <tr><td>Kjerne, begge dager</td><td class="n">9</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- LØPING -->
+<section class="view" id="v-loping" aria-labelledby="h-loping">
+  <h2 class="sec" id="h-loping">Løping</h2>
+  <p class="lead">Rundt 80 % rolig. Terskel mandag og langtur lørdag i blokk 1. Rolige dager styres på puls, harde dager på følelse og tempo. Tempoene regnes på nytt etter hver test i Excel-arket.</p>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase;margin-bottom:4px">Sonene · VDOT 46 · makspuls 192</h3>
+    <div class="zone"><span class="z">Rolig</span><span></span><span class="p">5:20–5:50</span><span class="f"><b>Sone 2, 115–134.</b> Hele setninger. Onsdag, fredag og langtur. Pulsen styrer: blir den over 134 på flatt, saktere.</span></div>
+    <div class="zone"><span class="z">Maraton</span><span></span><span class="p">4:45</span><span class="f"><b>Sone 3, 134–154.</b> Rytmisk. Slutten av langturen fra uke 4.</span></div>
+    <div class="zone"><span class="z" style="color:var(--accent-ink)">Terskel</span><span></span><span class="p">4:25</span><span class="f"><b>Sone 4, 154–173, mest 160–170.</b> Kontrollert hardt, 3–4 ord om gangen. Pulsen kommer etter i de første dragene, så følelsen styrer.</span></div>
+    <div class="zone"><span class="z">Intervall</span><span></span><span class="p">4:05</span><span class="f"><b>Øvre sone 4 til sone 5, 170+.</b> Hardt, ikke alt. Fra blokk 3.</span></div>
+    <div class="zone"><span class="z">Stigning</span><span></span><span class="p">3:45</span><span class="f">20 sekunder, raskt og avslappet. For kort til at pulsen betyr noe.</span></div>
+    <div class="zone"><span class="z">Målfart HM</span><span></span><span class="p">4:16</span><span class="f">I dag 4:40. 10 km på 40:00 er 4:00.</span></div>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Blokk 1 · uke for uke</h3>
+    <div class="scroll"><table style="margin-top:6px">
+      <tr><th>Uke</th><th>Mandag · terskel</th><th>Lørdag · langtur</th><th class="n">Ons + fre</th><th class="n">Ca. km</th></tr>
+      <tr><td class="n">1</td><td>5 × 5 min, 1 min pause</td><td>60 min rolig</td><td class="n">40 + 35</td><td class="n">32</td></tr>
+      <tr><td class="n">2</td><td>5 × 6 min, 1 min</td><td>70 min rolig</td><td class="n">45 + 35</td><td class="n">36</td></tr>
+      <tr><td class="n">3</td><td>6 × 6 min, 1 min</td><td>75 min rolig</td><td class="n">45 + 40</td><td class="n">40</td></tr>
+      <tr><td class="n">4</td><td>4 × 8 min, 1 min</td><td>80 min, siste 10 i M</td><td class="n">50 + 40</td><td class="n">44</td></tr>
+      <tr><td class="n">5</td><td>3 × 10 min, 90 sek</td><td>85 min, siste 15 i M</td><td class="n">50 + 45</td><td class="n">47</td></tr>
+      <tr><td class="n">6</td><td colspan="4">Testuke. 5 km-test lørdag.</td></tr>
+    </table></div>
+    <p class="foot" style="margin:8px 0 0">Terskeløkta: 15 min rolig, 4 stigningsløp, dragene, 10 min rolig ned. Uke 1 ligger litt over dagens 25–30 km, siden hun har tålt mer i sommer. Deretter rundt 10 % i uka. Glatt føre: tredemølle på 1 % stigning.</p>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Veien til september</h3>
+    <div id="blocks"></div>
+    <p class="foot" style="margin:6px 0 0">Detaljene i hver blokk settes etter testen før. Sentrumsløpet er 24. april 2027. Oslo Maraton har ikke bekreftet datoen for 2027. Lørdag 11. september er den sannsynlige.</p>
+  </div>
+</section>
+
+<!-- TESTER -->
+<section class="view" id="v-tester" aria-labelledby="h-tester">
+  <h2 class="sec" id="h-tester">Tester</h2>
+  <p class="lead">Testdag nå, så uke 6 i hver blokk. Samme rekkefølge, samme rute og samme maskin hver gang. Alt føres i Excel-arket, som regner ut startvekter og nye tempoer.</p>
+  <div class="callout">
+    <p><b>Testuka nå, 3.–8. november.</b> Tirsdag: målinger om morgenen og styrketest om kvelden. Onsdag rolig 40 min. Torsdag rolig 30 min + 4 stigningsløp. Fredag fri. Lørdag 5 km-test. Søndag fri.</p>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Styrketesten · ca. 60 min</h3>
+    <p style="margin:8px 0;font-size:15px"><b>Oppvarming, 10 min:</b> 5 min sykkel eller romaskin, så to runder med 10 knebøy med egen vekt, 10 hoftebøy, 10 armhevinger på benk og 15 strikk-trekk.</p>
+    <p style="margin:8px 0;font-size:15px"><b>Hvert løft:</b> lett × 10, rundt 50 % × 5, 70 % × 3, 85 % × 1. Så testsettet. Inntil tre forsøk med 3 min pause.</p>
+    <div class="scroll"><table>
+      <tr><th>Løft</th><th>Test</th><th>Stopp når</th></tr>
+      <tr><td>Knebøy</td><td>Tyngste rene 5</td><td>Farten opp faller tydelig</td></tr>
+      <tr><td>Rumensk markløft</td><td>8 reps, 2 i reserve</td><td>Ryggen runder. Aldri maks.</td></tr>
+      <tr><td>Nedtrekk</td><td>Tyngste rene 8</td><td>Brystet slutter å komme opp</td></tr>
+      <tr><td>Skulderpress, manualer</td><td>Tyngste rene 8</td><td>Svai i ryggen</td></tr>
+      <tr><td>Chins</td><td>Maks med egen vekt</td><td>0 reps: noter motvekten for 5</td></tr>
+      <tr><td>Stille lengde</td><td>Beste av 3</td><td>Mål fra hælen</td></tr>
+    </table></div>
+    <p class="foot" style="margin:8px 0 0">Noter vekt, reps og hvor mange hun hadde igjen. Er knebøy ny teknikk: test 8 reps med 2 i reserve. Resten av øvelsene: første økt, finn vekta der toppen av spennet gir 1–2 i reserve.</p>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="font-size:20px;text-transform:uppercase">5 km-testen</h3>
+      <ol class="list" style="margin-top:8px;font-size:15px">
+        <li>Samme flate, målte rute hver gang, eller bane. Tredemølle på 1 % om føret er dårlig.</li>
+        <li>Ingen tunge bein de siste 48 timene. Frokost 2–3 timer før.</li>
+        <li>15 min rolig, 4 × 20 sek stigning, 3 min gange.</li>
+        <li>Jevnt. Første km maks 5 sek raskere enn snittet hun tror på.</li>
+        <li>Noter tid, snittpuls, makspuls, vær og sko.</li>
+      </ol>
+      <p class="foot" style="margin:8px 0 0">I dag tilsvarer 1:38:28 rundt 21:25. Målet til jul er under 21:00.</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:20px;text-transform:uppercase">Målinger og bilder</h3>
+      <ul class="list" style="margin-top:8px;font-size:15px">
+        <li><b>Vekt</b> om morgenen, etter toalett, før mat.</li>
+        <li><b>Omkrets</b>, høyre side, avslappet: midje på smaleste punkt, ved navlen, <b>nedre mage 5 cm under navlen</b>, hofte, lår og overarm. Mål to ganger og bruk snittet.</li>
+        <li><b>Bilder</b> forfra, fra siden og bakfra, avslappet og spent. Samme lys, klær og tid.</li>
+        <li><b>Body scan</b> på samme maskin, morgen og fastende.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Testene videre</h3>
+    <div class="scroll"><table style="margin-top:6px">
+      <tr><th class="n">Test</th><th>Uke</th><th>Løpetest</th></tr>
+      <tr><td class="n">1</td><td>14.–20. desember</td><td>5 km</td></tr>
+      <tr><td class="n">2</td><td>25.–31. januar</td><td>5 km</td></tr>
+      <tr><td class="n">3</td><td>8.–14. mars</td><td>5 km</td></tr>
+      <tr><td class="n">4</td><td>24. april</td><td>Sentrumsløpet, 10 km</td></tr>
+      <tr><td class="n">5</td><td>31. mai–6. juni</td><td>5 km</td></tr>
+      <tr><td class="n">6</td><td>12.–18. juli</td><td>5 eller 10 km</td></tr>
+      <tr><td class="n">7</td><td>23.–29. august</td><td>10 km eller 15 km i HM-fart</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- RAMMER -->
+<section class="view" id="v-rammer" aria-labelledby="h-rammer">
+  <h2 class="sec" id="h-rammer">Rammer</h2>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Reglene</h3>
+    <div style="margin-top:4px">
+      <div class="rule"><b>Søvn under 6 timer, eller stress 4–5 av 5</b><span>Stryk siste sett på alle øvelser. Terskel blir 40 min rolig.</span></div>
+      <div class="rule"><b>Hvilepuls 5 over normalen to morgener</b><span>Bare rolig løping til pulsen er nede.</span></div>
+      <div class="rule"><b>Syk over halsen</b><span>Snue og tett nese: rolig løp og lett styrke går. Ingen terskel.</span></div>
+      <div class="rule"><b>Syk under halsen</b><span>Feber, hoste eller muskelverk: ingen trening. Rolig start etter to dager uten feber.</span></div>
+      <div class="rule"><b>Smerte over 3 av 10 under løp</b><span>Eller verre neste morgen i akilles, legg, kne eller fot: avbryt, to dager uten løping. Ikke bedre etter en uke: fysioterapeut.</span></div>
+      <div class="rule"><b>Travel uke</b><span>Behold terskel, langtur og styrke A. Kutt i rekkefølge: rolig fredag, så styrke C. Søndag er alltid hviledag.</span></div>
+      <div class="rule"><b>Jul og reiser</b><span>Løpingen fortsetter. Styrke med egen vekt to ganger: utfall, armhevinger, dead bug, sideplanke.</span></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="font-size:20px;text-transform:uppercase">Mat</h3>
+      <ul class="list" style="margin-top:8px;font-size:15px">
+        <li><b>100–110 g protein</b> om dagen på fire måltider. Proteinshake teller.</li>
+        <li><b>Karbohydrater rundt de harde øktene</b>, 2–3 timer før og innen en time etter. Aldri terskel fastende. Mandag og lørdag er de viktigste matdagene.</li>
+        <li><b>Ingen kalorimangel nå.</b> Står midje og scan stille etter to tester, kuttes litt på rolige dager. Aldri på terskel- og langturdager.</li>
+        <li><b>Kreatin 3–5 g</b> er valgfritt. Kan gi 0,5–1 kg vann.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="font-size:20px;text-transform:uppercase">Varsellamper</h3>
+      <p style="margin:8px 0;font-size:15px">Syklusen endrer seg eller uteblir, prestasjonen faller over flere uker, hun blir ofte syk, eller hun får smerte i skinnebein eller fot som ikke går over.</p>
+      <p style="margin:8px 0;font-size:15px">Det betyr for lite energi i forhold til treningen. Svaret er mer mat og en legetime, ikke en hardere uke.</p>
+    </div>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Nedre mage og huden</h3>
+    <div class="grid2" style="margin-top:8px;font-size:15px">
+      <div>
+        <p style="margin:0 0 6px"><b>Det som virker:</b> dyp kjerne begge styrkedagene, litt lavere fett totalt og god holdning. Magefettet går når totalfettet går, ofte sist.</p>
+        <p style="margin:0"><b>Det som ikke virker:</b> mange situps. Fett kan ikke trenes bort fra ett sted.</p>
+      </div>
+      <div>
+        <p style="margin:0 0 6px"><b>Sjekk etter tre svangerskap:</b> ligg på ryggen, løft hodet litt og kjenn over navlen. Mer enn to fingerbredder mellom magemusklene, eller bule i midten: få en fysioterapeut med kvinnehelse til å se på det før tung magetrening.</p>
+        <p style="margin:0"><b>Huden:</b> mer muskel og litt mindre fett strammer noe. Løs hud etter svangerskap trenes ikke bort.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HVORFOR -->
+<section class="view" id="v-hvorfor" aria-labelledby="h-hvorfor">
+  <h2 class="sec" id="h-hvorfor">Hvorfor</h2>
+  <p class="lead">Hun er allerede slank og atletisk bygd, og løp 1:38:28 etter tre måneder med systematisk løping. Det som gjenstår er å se trent ut og løpe fortere, og de to hjelper hverandre.</p>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Det som mangler, i rekkefølge</h3>
+    <ol class="list" style="margin-top:8px">
+      <li><b>Overkropp.</b> Skuldre, øvre rygg og armer gir det atletiske uttrykket og balanserer en sterk underkropp.</li>
+      <li><b>Styrke i beina, ikke størrelse.</b> Tung styrke med få reps gjør steget mer økonomisk og senene sterkere. Setet holdes uten Booty Builder.</li>
+      <li><b>Terskelfart.</b> Fra 4:40 til 4:16 per km på halvmaraton, bygget med kontrollert terskel og rolig volum.</li>
+      <li><b>Nedre mage.</b> Dyp kjerne og litt lavere fett totalt.</li>
+    </ol>
+    <p class="foot" style="margin:8px 0 0">Når bildene er inne, justeres prioriteringen av muskelgrupper etter dem.</p>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Tre avgjørelser</h3>
+    <div style="margin-top:4px">
+      <div class="rule"><b>Løpingen styrer uka</b><span>Terskel mandag, tunge bein tirsdag, aldri tunge bein dagen før terskel. Søndag er hviledag, så beina er uthvilt mandag. Ingen dobbeløkter.</span></div>
+      <div class="rule"><b>Fullkropp to ganger, maks 60 minutter, og fast hviledag</b><span>Mest volum på skuldre og rygg. Søndag er fri hver uke, fordi søvn og hverdag tåler mindre enn treningen krever. Beina får 3 sett per øvelse med 2 i reserve, nok til å holde setet og bli sterkere. Med fire løpedager i uka blir hun ikke bulky av dette.</span></div>
+      <div class="rule"><b>Ingen slankekur</b><span>Kalorimangel og løpsprogresjon går ikke sammen, og hun har lite å gå ned. Fettprosenten går ned av mer muskel og jevn løping.</span></div>
+    </div>
+  </div>
+  <div class="callout">
+    <p><b>Ærlig om løpemålene.</b> 1:38:28 tilsvarer VDOT 46, eller rundt 44:30 på 10 km. Sub 1:30 krever VDOT 51. Det er mye på ti måneder, men realistisk for en som har trent systematisk siden juni.</p>
+    <p><b>Sub 40 på Sentrumsløpet krever VDOT 52</b>, altså mer enn sub 1:30, og fem måneder tidligere. 41–42 minutter i april er sterkt og i rute mot september. Sub 40 er bonusen.</p>
+  </div>
+  <div class="card">
+    <h3 style="font-size:20px;text-transform:uppercase">Slik ser suksess ut</h3>
+    <div style="margin-top:4px">
+      <div class="rule"><b>Jul</b><span>Startvektene er funnet og hovedløftene er 5–10 % opp. 5 km under 21:00. Midje og nedre mage ned eller lik. Ingen skader.</span></div>
+      <div class="rule"><b>April</b><span>Sentrumsløpet på 41–42 minutter.</span></div>
+      <div class="rule"><b>September</b><span>Oslo Halvmaraton under 1:30, og et trent, slankt og atletisk uttrykk.</span></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+const START = new Date(2026,10,9); // uke 1, mandag 9. november
+const WEEK0 = new Date(2026,10,2);
+const DAYMS = 864e5;
+const DN = ["Man","Tir","Ons","Tor","Fre","Lør","Søn"];
+const MN = ["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"];
+const fmt = d => d.getDate()+". "+MN[d.getMonth()];
+const today = new Date(); today.setHours(0,0,0,0);
+
+// nedtelling
+function days(to){ return Math.max(0, Math.round((to - today)/DAYMS)); }
+document.getElementById("cd-hm").textContent = days(new Date(2027,8,11))+" dager";
+document.getElementById("cd-sl").textContent = days(new Date(2027,3,24))+" dager";
+
+// økter
+const S = {
+ A:{title:"Styrke A · tunge bein + overkropp", when:"Tirsdag, dagen etter terskelen. Ca. 55 min.", wu:"Ekstra for A: tom stang × 10 i knebøy og rumensk markløft før rampen.", ex:[
+  {n:"Knebøy",eq:"stang",s:3,r:"4–6",rir:"2",h:"3 min",c:"Ramp: lett × 10, 50 % × 5, 70 % × 3, 85 % × 1. Kontrollert ned, maks fart opp."},
+  {n:"Rumensk markløft",eq:"stang",s:3,r:"6–8",rir:"2",h:"2,5 min",c:"Hoftene bak, stanga langs lårene. Sete og bakside."},
+  {n:"Nedtrekk, bredt grep",eq:"kabel",s:3,r:"8–12",rir:"1",h:"90 sek etter paret",c:"Ryggbredden. Full strekk på toppen.",ssA:true,grow:true},
+  {n:"Skrå manualpress, 30°",eq:"manualer",s:3,r:"8–12",rir:"1",h:"",c:"Øvre bryst og fremre skulder.",ssB:true},
+  {n:"Kabelroing, sittende",eq:"kabel",s:3,r:"10–12",rir:"1",h:"60 sek etter paret",c:"Strekk fram, klem skulderbladene bak.",ssA:true,grow:true},
+  {n:"Sidehev, kabel bak kroppen",eq:"kabel, lavt feste",s:4,r:"12–15",rir:"0–1",h:"",c:"Skulderbredden. Lang muskellengde.",ssB:true,grow:true},
+  {n:"Sittende tåhev",eq:"maskin",s:3,r:"12–15",rir:"1",h:"45 sek etter paret",c:"Soleus og akilles. 2 sek pause i bunnen.",ssA:true},
+  {n:"Omvendt crunch",eq:"benk",s:3,r:"10–15",rir:"1",h:"",c:"Nedre mage. Rull bekkenet opp, ikke sving beina.",ssB:true}]},
+ C:{title:"Styrke C · spenst, sete + overkropp", when:"Torsdag, 48 timer før langturen. Ca. 60 min.", wu:"Ekstra for C: 2 × 10 sek lette hopp på stedet før spensten.", ex:[
+  {n:"Pogohopp + boksehopp",eq:"gulv, boks",s:3,r:"20 + 5",rir:"–",h:"60 sek",c:"Stive ankler, rask kontakt. Alltid uthvilt."},
+  {n:"Bulgarsk utfall",eq:"manualer",s:3,r:"6–8/bein",rir:"2",h:"2 min",c:"Svakeste bein først. Len litt fram for mer sete."},
+  {n:"Chins, assistert",eq:"maskin eller strikk",s:3,r:"5–8",rir:"1–2",h:"2 min etter paret",c:"Mindre motvekt når 8 går. Mål: egen vekt.",ssA:true},
+  {n:"Skulderpress, sittende",eq:"manualer",s:3,r:"8–10",rir:"1–2",h:"",c:"Albuene litt foran kroppen. Ikke svai.",ssB:true},
+  {n:"45° hofteekstensjon",eq:"benk, skive",s:3,r:"10–15",rir:"1",h:"75 sek etter paret",c:"Setet uten Booty Builder. Tær litt ut, rund ryggen lett.",ssA:true},
+  {n:"Enarms manualroing",eq:"manual, benk",s:3,r:"10–12/side",rir:"1",h:"",c:"Albuen mot hofta.",ssB:true},
+  {n:"Sidehev",eq:"manualer",s:4,r:"12–20",rir:"0–1",h:"45 sek etter paret",c:"Led med albuene.",ssA:true,grow:true},
+  {n:"Omvendt pec deck",eq:"maskin",s:3,r:"15–20",rir:"0–1",h:"",c:"Bakre skulder og holdning.",ssB:true},
+  {n:"Dead bug",eq:"gulv",s:3,r:"8/side",rir:"2",h:"45 sek etter paret",c:"Korsryggen i gulvet, pust helt ut. Dyp mage.",ssA:true},
+  {n:"Abhjul, knestående",eq:"abhjul",s:3,r:"8–12",rir:"1–2",h:"",c:"Ribbeina ned, ikke svai.",ssB:true}]}
+};
+
+// løping blokk 1
+const B1 = {1:["5 × 5 min terskel, 1 min pause","60 min rolig",40,35],2:["5 × 6 min terskel, 1 min","70 min rolig",45,35],3:["6 × 6 min terskel, 1 min","75 min rolig",45,40],4:["4 × 8 min terskel, 1 min","80 min, siste 10 i M-fart",50,40],5:["3 × 10 min terskel, 90 sek","85 min, siste 15 i M-fart",50,45]};
+const BLOCKS = [
+ ["9. nov–20. des","Grunnmur","Terskel en gang i uka, langtur 60 → 85 min. Styrke 2 ×, finne vektene."],
+ ["21. des–31. jan","Mer terskel","Terskeldrag på 2–3 km. Langtur 90–100 min med siste 20 i M-fart. Femte tur om søvnen tillater."],
+ ["1. feb–14. mars","Fart","Torsdag blir intervall: 5 × 1000 m eller 6 × 800 m. Styrke C flyttes til fredag, med beina ned til 2 sett."],
+ ["15. mars–24. april","10 km","5 × 2 km i 10 km-fart. Styrke 2 × fra uke 4. Nedtrapping, så Sentrumsløpet."],
+ ["26. april–6. juni","Ny grunnmur","En helt rolig uke, så muskelblokk: mest styrkevolum i året, med en valgfri tredje styrkeøkt."],
+ ["7. juni–18. juli","Volum","Fem turer, terskel to ganger, langtur 100–110 min."],
+ ["19. juli–29. aug","Halvmaraton","3 × 5 km i HM-fart, langtur 18–22 km med HM-blokker. Styrke 2 ×."],
+ ["30. aug–11. sept","Nedtrapping","Volum ned 30 %, så 50 %, farten beholdes. Oslo Halvmaraton."]
+];
+
+function weekOf(d){ return Math.floor((d - START)/DAYMS/7)+1; }
+let curWeek = Math.max(0, Math.min(48, weekOf(today)));
+
+function planFor(w){
+  const P = [];
+  if (w===0){
+    return [
+      {k:"rest",t:"Fri",d:"Testuka starter i morgen."},
+      {k:"test",t:"Målinger + styrketest",d:"Morgen: vekt, omkrets, bilder. Kveld: styrketesten.",link:"tester"},
+      {k:"run",t:"Rolig 40 min",d:"Lett etter testen."},
+      {k:"run",t:"Rolig 30 min",d:"+ 4 stigningsløp."},
+      {k:"rest",t:"Fri",d:"Hvile før testen."},
+      {k:"test",t:"5 km-test",d:"Samme rute hver gang. Gir nye tempoer.",link:"tester"},
+      {k:"rest",t:"Fri",d:"Eller rolig 30 min. Programmet starter i morgen."}];
+  }
+  const b = Math.ceil(w/6), wb = ((w-1)%6)+1;
+  if (wb===6){
+    return [
+      {k:"run",t:"Rolig 30 min",d:"Testuke: halvt volum. Ingen terskel."},
+      {k:"test",t:"Målinger + styrketest",d:"Morgen: målinger og bilder. Kveld: testløftene.",link:"tester"},
+      {k:"run",t:"Rolig 30 min",d:"Sone 2."},
+      {k:"lift",t:"Styrke C, halve sett",d:"Bare overkroppsøvelsene.",s:"C"},
+      {k:"run",t:"Rolig 20 min",d:"+ 4 stigningsløp."},
+      {k:"test",t:b===4?"Sentrumsløpet 10 km":"Løpetest",d:b===4?"Lørdag 24. april. Testen er løpet.":"5 km, eller det blokka sier.",link:"tester"},
+      {k:"rest",t:"Fri",d:"Før testene inn i Excel."}];
+  }
+  if (b===1){
+    const r = B1[wb];
+    return [
+      {k:"run",t:"Terskel",d:r[0]+". Rundt 4:25, puls 160–170. 15 min rolig og 4 stigningsløp før, 10 min rolig etter."},
+      {k:"lift",t:"Styrke A",d:"Tunge bein og overkropp.",s:"A"},
+      {k:"run",t:"Rolig "+r[2]+" min",d:"Sone 2, under 134. + 6 × 20 sek stigningsløp."},
+      {k:"lift",t:"Styrke C",d:"Spenst, sete og overkropp.",s:"C"},
+      {k:"run",t:"Rolig "+r[3]+" min",d:"Sone 2, under 134."},
+      {k:"run",t:"Langtur",d:r[1]+". Sone 2."},
+      {k:"rest",t:"Hviledag",d:"Fast fri hver søndag."}];
+  }
+  const bl = BLOCKS[b-1] || BLOCKS[7];
+  const fart = (b===3||b===4);
+  return [
+    {k:"run",t:fart?"Terskel":"Kvalitet",d:fart?"Sone 4. Dragene settes etter testen.":bl[2]},
+    {k:"lift",t:"Styrke A",d:"Tunge bein og overkropp.",s:"A"},
+    {k:"run",t:"Rolig",d:"Sone 2. Lengde settes etter testen."},
+    fart ? {k:"run",t:"Intervall",d:"5 × 1000 m eller 6 × 800 m i I-fart, sone 5."} : {k:"lift",t:"Styrke C",d:"Spenst, sete og overkropp.",s:"C"},
+    fart ? {k:"lift",t:"Styrke C",d:"Beina ned til 2 sett, så langturen ikke blir tung.",s:"C"} : {k:"run",t:"Rolig",d:"Sone 2."},
+    {k:"run",t:"Langtur",d:"Lengde og fart settes etter testen."},
+    {k:"rest",t:"Hviledag",d:"Fast fri hver søndag."}];
+}
+
+function renderWeek(){
+  const w = curWeek;
+  const mon = w===0 ? WEEK0 : new Date(START.getTime()+(w-1)*7*DAYMS);
+  const sun = new Date(mon.getTime()+6*DAYMS);
+  const b = w===0?0:Math.ceil(w/6), wb = w===0?0:((w-1)%6)+1;
+  document.getElementById("wk-title").textContent = w===0 ? "Testuke nå" : "Uke "+w;
+  document.getElementById("wk-sub").textContent = fmt(mon)+"–"+fmt(sun)+(w===0?" · uke 0":" · blokk "+b+", uke "+wb);
+  const note = document.getElementById("wk-note");
+  note.innerHTML = (w===0||wb===6) ? '<span class="chip test">Testuke · halvt volum</span>' :
+    (b===1 && wb>=3 ? '<span class="chip">Uke '+wb+': +1 sett på sidehev, nedtrekk og kabelroing</span>' :
+    (b>1 ? '<span class="chip">Blokk '+b+' · '+BLOCKS[b-1][1]+'. Detaljene settes etter testen.</span>' : '<span class="chip">Blokk 1 · grunnmur</span>'));
+  const plan = planFor(w);
+  const box = document.getElementById("days"); box.innerHTML = "";
+  plan.forEach((p,i)=>{
+    const d = new Date(mon.getTime()+i*DAYMS);
+    const isToday = d.getTime()===today.getTime();
+    const el = document.createElement("div");
+    el.className = "day "+p.k+(isToday?" today":"");
+    let link = "";
+    if (p.s) link = ' <a class="dlink" href="#styrke" data-open="'+p.s+'">Åpne økt '+p.s+' ›</a>';
+    else if (p.link) link = ' <a class="dlink" href="#'+p.link+'">Se protokoll ›</a>';
+    el.innerHTML = '<div><div class="dname">'+DN[i]+'</div><div class="ddate num">'+fmt(d)+'</div></div>'+
+      '<div>'+(isToday?'<div class="today-tag">I dag</div>':'')+'<div class="dtitle">'+p.t+'</div><div class="ddetail">'+p.d+link+'</div></div>';
+    box.appendChild(el);
+  });
+  box.querySelectorAll("[data-open]").forEach(a=>a.addEventListener("click",()=>{ curSess=a.dataset.open; renderSession(); }));
+}
+document.getElementById("prev").onclick=()=>{ if(curWeek>0){curWeek--;renderWeek();} };
+document.getElementById("next").onclick=()=>{ if(curWeek<48){curWeek++;renderWeek();} };
+document.getElementById("to-today").onclick=()=>{ curWeek=Math.max(0,Math.min(48,weekOf(today))); renderWeek(); };
+
+// økt
+let curSess = "A";
+function store(){ try{ return window.localStorage; }catch(e){ return null; } }
+function key(i){ const d=today; return "marja-"+d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+"-"+curSess+"-"+i; }
+function renderSession(){
+  document.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.s===curSess?"true":"false"));
+  const s = S[curSess];
+  const w = Math.max(1, weekOf(today)), b = Math.ceil(w/6), wb = ((w-1)%6)+1;
+  const grow = b===1 && wb>=3 && wb<=5;
+  const half = wb===6;
+  const ls = store();
+  let html = '<div class="sess-head"><h3>'+s.title+'</h3><div class="foot">'+s.when+(half?' <span class="chip test">Testuke: halve sett</span>':'')+(grow?' <span class="chip">+1 sett i oransje denne uka</span>':'')+'</div></div>';
+  html += '<div class="wu"><b>Oppvarming, 5 min.</b> 3 min sykkel eller romaskin. Så én runde: 10 knebøy med egen vekt, 10 hoftebøy, 10 armhevinger på benk, 15 strikk-trekk og 10 skuldersirkler. '+s.wu+' Første øvelse i hvert supersett: ett lett sett før arbeidssettene.</div>';
+  s.ex.forEach((e,i)=>{
+    let sets = e.s; let extra = "";
+    if (half) sets = Math.max(1, Math.ceil(e.s/2));
+    else if (grow && e.grow){ extra = ' <span class="plus">+1</span>'; }
+    const done = ls && ls.getItem(key(i))==="1";
+    const id = "ex-"+curSess+"-"+i;
+    html += '<div class="ex'+(e.ssB?' ss':'')+(done?' done':'')+'">'+
+      '<input type="checkbox" id="'+id+'" data-i="'+i+'"'+(done?' checked':'')+' aria-label="Ferdig: '+e.n+'">'+
+      '<label for="'+id+'"><div>'+(e.ssA?'<span class="ss-tag">Supersett med neste · </span>':'')+(e.ssB?'<span class="ss-tag">Supersett · </span>':'')+'<span class="name">'+e.n+'</span></div>'+
+      '<div class="rx num"><span><b>'+sets+extra+' × '+e.r+'</b></span><span>RIR '+e.rir+'</span>'+(e.h?'<span>Hvile '+e.h+'</span>':'')+'<span>'+e.eq+'</span></div>'+
+      '<p class="cue">'+e.c+'</p></label></div>';
+  });
+  html += '<p class="foot" style="margin:10px 0 0">Avkrysningen lagres bare på denne telefonen, og nullstilles hver dag. Vekter og reps føres i Excel-arket.</p>';
+  const box = document.getElementById("session"); box.innerHTML = html;
+  box.querySelectorAll("input[type=checkbox]").forEach(cb=>cb.addEventListener("change",()=>{
+    const st = store(); if(st){ try{ st.setItem(key(cb.dataset.i), cb.checked?"1":"0"); }catch(e){} }
+    cb.closest(".ex").classList.toggle("done", cb.checked);
+  }));
+}
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{ curSess=b.dataset.s; renderSession(); }));
+// åpne dagens økt om det er en styrkedag
+(function(){ const dow=(today.getDay()+6)%7; if(dow===3)curSess="C"; })();
+
+// blokker
+(function(){
+  const w = weekOf(today), cur = w<1?1:Math.ceil(w/6);
+  document.getElementById("blocks").innerHTML = BLOCKS.map((b,i)=>
+    '<div class="block'+(i+1===cur?' now':'')+'"><div class="bn">'+(i+1)+'</div><div><div class="when">'+b[0]+(i+1===cur?' · nå':'')+'</div><p><b>'+b[1]+'.</b> '+b[2]+'</p></div></div>').join("");
+})();
+
+// faner
+const VIEWS = ["uka","styrke","loping","tester","rammer","hvorfor"];
+function route(){
+  let h = (location.hash||"").replace("#","");
+  if (VIEWS.indexOf(h)<0) h = "uka";
+  VIEWS.forEach(v=>document.getElementById("v-"+v).classList.toggle("on", v===h));
+  document.querySelectorAll("nav.tabs a").forEach(a=>{ if(a.getAttribute("href")==="#"+h) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+}
+window.addEventListener("hashchange", route);
+renderWeek(); renderSession(); route();
+})();
+</script>
+</body>
+</html>
