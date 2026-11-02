@@ -254,7 +254,9 @@ a.ext{color:var(--teal)}
   <h2 class="sec" id="h-tester">Tester</h2>
   <p class="lead">Styrketest og målinger nå, og deretter i uke 6 i hver blokk. Farten følges i intervalløktene, så det er ingen egne løpetester før Sentrumsløpet.</p>
   <div class="callout">
-    <p><b>Testuka nå, 3.–8. november.</b> Tirsdag: målinger om morgenen og styrketest om kvelden. Onsdag rolig 40 min. Torsdag rolig 30 min + 4 stigningsløp. Fredag fri. Lørdag rolig 45 min. Søndag fri. Programmet starter mandag 9. november.</p>
+    <p><b>Startuka, 3.–8. november.</b> Programmet starter tirsdag. Testløftene tas som første del av styrkeøktene denne uka:</p>
+    <p><b>Tirsdag, økt A:</b> målinger om morgenen. I økta tester hun beinpress, rumensk markløft og nedtrekk først, og tar så resten av A. <b>Onsdag, økt B:</b> skulderpress og hang-ups først. <b>Fredag, økt C:</b> stille lengde etter pogohoppene.</p>
+    <p>Torsdag 6 × 800 m, lørdag 8 × 3 min terskel og søndag langtur, som en vanlig uke. Fra testuka i desember tas alle testløftene samlet på tirsdagen.</p>
   </div>
   <div class="card">
     <h3 style="font-size:20px;text-transform:uppercase">Styrketesten, steg for steg · ca. 60 min</h3>
@@ -263,7 +265,7 @@ a.ext{color:var(--teal)}
     <p style="margin:8px 0;font-size:15px"><b>To ord:</b> Et <b>rent rep</b> er full bevegelse, kontrollert, uten å jukse eller svinge. <b>Tyngste rene 8</b> er den tyngste vekta der hun klarer 8 rene reps, og der et niende ikke ville gått, eller bare så vidt.</p>
     <ol class="steps">
       <li><b>Oppvarming, 10 min.</b> 5 min sykkel eller romaskin, så to runder med 10 knebøy med egen vekt, 10 hoftebøy, 10 armhevinger på benk og 15 strikk-trekk.</li>
-      <li><b>Samme rekkefølge hver gang:</b> beinpress, rumensk markløft, nedtrekk, skulderpress, hang-ups, stille lengde.</li>
+      <li><b>Samme rekkefølge hver gang:</b> beinpress, rumensk markløft, nedtrekk, skulderpress, hang-ups, stille lengde. I startuka fordeles de på A, B og C, se over. Etter testløftene fortsetter hun med resten av økta på vanlige vekter.</li>
       <li><b>Bygg opp mot testvekta i hvert løft:</b>
         <div class="scroll"><table style="margin-top:6px;font-size:14px">
           <tr><th>Sett</th><th>Vekt</th><th class="n">Reps</th><th class="n">Pause</th></tr>
@@ -484,13 +486,13 @@ function planFor(w){
   const P = [];
   if (w===0){
     return [
-      {k:"rest",t:"Fri",d:"Testuka starter i morgen."},
-      {k:"test",t:"Målinger + styrketest",d:"Morgen: vekt, omkrets, bilder. Kveld: styrketesten.",link:"tester"},
-      {k:"run",t:"Rolig 40 min",d:"Lett etter testen."},
-      {k:"run",t:"Rolig 30 min",d:"+ 4 stigningsløp."},
-      {k:"rest",t:"Fri",d:""},
-      {k:"run",t:"Rolig 45 min",d:"Sone 2."},
-      {k:"rest",t:"Fri",d:"Eller rolig 30 min. Programmet starter i morgen."}];
+      {k:"rest",t:"Fri",d:"Programmet starter i morgen."},
+      {k:"lift",t:"Styrke A + testløft",d:"Morgen: vekt, omkrets, bilder. Økt: test beinpress, rumensk markløft og nedtrekk først, så resten av A.",s:"A"},
+      {k:"lift",t:"Styrke B + testløft",d:"Test skulderpress og hang-ups først, så resten av B.",s:"B"},
+      {k:"run",t:"Intervall · 10 km-fart",d:"6 × 800 m, 2 min jogg. Rundt 4:10, sone 4–5."},
+      {k:"lift",t:"Styrke C + stille lengde",d:"Stille lengde etter pogohoppene, så resten av C.",s:"C"},
+      {k:"run",t:"Intervall · korte terskeldrag",d:"8 × 3 min, 1 min pause. Rundt 4:20–4:25, puls 160–170."},
+      {k:"run",t:"Langtur",d:"50 min rolig. Sone 2, under 134."}];
   }
   const b = Math.ceil(w/6), wb = ((w-1)%6)+1;
   if (b===4 && wb===6){
@@ -542,11 +544,11 @@ function renderWeek(){
   const mon = w===0 ? WEEK0 : new Date(START.getTime()+(w-1)*7*DAYMS);
   const sun = new Date(mon.getTime()+6*DAYMS);
   const b = w===0?0:Math.ceil(w/6), wb = w===0?0:((w-1)%6)+1;
-  document.getElementById("wk-title").textContent = w===0 ? "Testuke nå" : "Uke "+w;
+  document.getElementById("wk-title").textContent = w===0 ? "Startuke" : "Uke "+w;
   document.getElementById("wk-sub").textContent = fmt(mon)+"–"+fmt(sun)+(w===0?" · uke 0":" · blokk "+b+", uke "+wb);
   const note = document.getElementById("wk-note");
   const wtype = (w>0 && wb!==6 && b<=4) ? (isHard(b,wb) ? '<span class="chip test">Hard uke · to harde økter</span> ' : '<span class="chip">Terskeluke · én hard økt</span> ') : '';
-  note.innerHTML = wtype + ((w===0||wb===6) ? '<span class="chip test">Testuke · halvt volum</span>' :
+  note.innerHTML = wtype + (w===0 ? '<span class="chip test">Startuke · testløftene tas i øktene</span>' : wb===6 ? '<span class="chip test">Testuke · halvt volum</span>' :
     (b===1 && wb>=3 ? '<span class="chip">Uke '+wb+': +1 sett på sidehev, nedtrekk og roing</span>' :
     (b>1 ? '<span class="chip">Blokk '+b+' · '+BLOCKS[b-1][1]+'. Detaljene settes etter testen.</span>' : '<span class="chip">Blokk 1 · grunnmur for fart</span>')));
   const plan = planFor(w);
@@ -580,7 +582,9 @@ function renderSession(){
   const grow = b===1 && wb>=3 && wb<=5;
   const half = wb===6;
   const ls = store();
-  let html = '<div class="sess-head"><h3>'+s.title+'</h3><div class="foot">'+s.when+(half?' <span class="chip test">Testuke: halve sett</span>':'')+(grow?' <span class="chip">+1 sett i oransje denne uka</span>':'')+'</div></div>';
+  const startTxt = {A:"Startuke: test beinpress, rumensk markløft og nedtrekk først, se Tester.",B:"Startuke: test skulderpress og hang-ups først, se Tester.",C:"Startuke: stille lengde etter pogohoppene, se Tester."};
+  const startNote = weekOf(today)<1 ? ' <span class="chip test">'+startTxt[curSess]+'</span>' : '';
+  let html = '<div class="sess-head"><h3>'+s.title+'</h3><div class="foot">'+s.when+startNote+(half?' <span class="chip test">Testuke: halve sett</span>':'')+(grow?' <span class="chip">+1 sett i oransje denne uka</span>':'')+'</div></div>';
   html += '<div class="wu"><b>Oppvarming, 5 min.</b> 3 min sykkel eller romaskin. Så én runde: 10 knebøy med egen vekt, 10 hoftebøy, 10 armhevinger på benk, 15 strikk-trekk og 10 skuldersirkler. '+s.wu+' Første øvelse i hvert supersett: ett lett sett før arbeidssettene.</div>';
   s.ex.forEach((e,i)=>{
     let sets = e.s; let extra = "";
