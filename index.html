@@ -863,6 +863,14 @@ function route(){
 }
 window.addEventListener("hashchange", route);
 initLogUI(); renderAllLog(); renderWeek(); renderSession(); route();
+// Alltid dagens uke: tegn på nytt når siden åpnes igjen, og last inn på nytt hvis dagen har skiftet
+function toToday(scroll){ curWeek = Math.max(0, Math.min(48, weekOf(today))); renderWeek();
+  if (scroll){ const t = document.querySelector("#days .day.today"); if (t && (location.hash===""||location.hash==="#uka")) t.scrollIntoView({block:"center"}); } }
+toToday(true);
+function checkDay(){ if (iso(new Date()) !== TODAY) location.reload(); else if (document.visibilityState==="visible") toToday(false); }
+document.addEventListener("visibilitychange", checkDay);
+window.addEventListener("pageshow", e=>{ if (e.persisted) checkDay(); });
+document.querySelectorAll('nav.tabs a[href="#uka"]').forEach(a=>a.addEventListener("click",()=>toToday(false)));
 })();
 </script>
 </body>
