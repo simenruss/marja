@@ -87,7 +87,8 @@ h2.sec{font-size:28px;text-transform:uppercase;font-weight:700}
 .ex .cue{font-size:15px;margin:0}
 .ex.ss{border-top:1px dashed var(--line)}
 .lg{grid-column:2;display:grid;gap:6px;margin-top:6px;padding:8px 10px;background:var(--bg);border-radius:10px}
-.lg .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lg .row{display:flex;flex-wrap:nowrap;gap:6px;align-items:center}
+.lg .row .k:first-child{width:46px}
 .lg label.k{font-size:13px;color:var(--muted);font-weight:600}
 .in{font:inherit;font-size:16px;width:50px;padding:6px 6px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums}
 .in.w{width:68px}
@@ -211,7 +212,7 @@ a.ext{color:var(--teal)}
       <li><b>RIR er reps i reserve:</b> hvor mange flere du kunne tatt med god teknikk. RIR 2 betyr stopp når du har to igjen. RIR 0 betyr at neste rep ikke ville gått.</li>
       <li><b>Tempo:</b> 2–3 sek ned, kort stopp i strekk, kontrollert opp. Muskelen skal jobbe gjennom hele bevegelsen, ikke vekta svinge.</li>
       <li><b>Progresjon:</b> når alle sett når toppen av spennet, går vekta opp ett trinn neste gang. Reps faller da litt, og du bygger opp igjen.</li>
-      <li><b>Logg</b> kg og reps i feltene under hver øvelse etter hvert sett. Neste gang viser øvelsen hva hun gjorde sist, og om vekta skal opp.</li>
+      <li><b>Logg</b> kg og reps for hvert sett i feltene under øvelsen. Bruker hun samme vekt på alle sett, holder det å skrive kg i første sett. Neste gang viser øvelsen hva hun gjorde sist, og om vekta skal opp.</li>
     </ol>
   </details>
   <div class="card" id="session"></div>
@@ -535,6 +536,7 @@ const num = v => { if(v===undefined||v===null) return NaN; const n = parseFloat(
 const fmt1 = n => (Math.round(n*10)/10).toString().replace(".", ",");
 const esc = t => String(t).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function range(r){ const m = String(r).match(/(\d+)\D+(\d+)/); if(m) return [+m[1], +m[2]]; const k = String(r).match(/(\d+)/); return k?[+k[1],+k[1]]:[0,0]; }
+function setsOf(v){ if(!v) return []; if(Array.isArray(v.sets)) return v.sets; return (v.reps||[]).map(r=>({kg:v.kg||"", reps:r})); }
 function lastLift(sess, name){
   let best = null;
   Object.keys(LOG.lifts).forEach(k=>{ const [d,ss,n] = k.split("|"); if(ss===sess && n===name && d<TODAY && (!best || d>best.d)) best = {d, v:LOG.lifts[k]}; });
@@ -550,31 +552,41 @@ function startFor(name, reps, rirTxt){
   const top = range(reps)[1]; const q = range(rirTxt)[0];
   return Math.floor(e/(1+(top+q)/30)/m[1])*m[1];
 }
-function logRow(sess, e, n, reps, i){
-  const k = TODAY+"|"+sess+"|"+e.n; const cur = LOG.lifts[k] || {kg:"", reps:[]};
-  const last = lastLift(sess, e.n);
+function logRow(sess, e, n, reps, i, tung){
+  const ln = e.n + (tung ? " · tung" : "");
+  const k = TODAY+"|"+sess+"|"+ln; const cur = setsOf(LOG.lifts[k]);
+  const last = lastLift(sess, ln);
   const [lo, hi] = range(reps);
-  let info = "";
+  let info = "", ph = "";
   if (last){
-    const r = last.v.reps.filter(x=>x!==""&&x!=null);
-    info = '<span class="last">Sist '+last.d.slice(8,10)+"."+last.d.slice(5,7)+": "+esc(last.v.kg||"–")+" kg × "+(r.join(", ")||"–")+'</span>';
-    const nums = r.map(Number).filter(x=>!isNaN(x));
+    const ls = setsOf(last.v).filter(x=>x && (x.reps!==""||x.kg!==""));
+    info = '<span class="last">Sist '+last.d.slice(8,10)+"."+last.d.slice(5,7)+": "+(ls.map(x=>esc(x.kg||"–")+"×"+esc(x.reps||"–")).join(", ")||"–")+'</span>';
+    const nums = ls.map(x=>Number(String(x.reps).replace(",","."))).filter(x=>!isNaN(x));
+    const kgs = ls.map(x=>num(x.kg)).filter(x=>!isNaN(x));
+    if (kgs.length) ph = fmt1(Math.max.apply(null,kgs));
     if (nums.length && Math.min.apply(null, nums) >= hi) info += ' <span class="sug up">Øk vekta ett trinn i dag</span>';
     else if (nums.length && Math.min.apply(null, nums) < lo) info += ' <span class="sug">Hold vekta, eller ett trinn ned</span>';
     else if (nums.length) info += ' <span class="sug">Samme vekt, flere reps</span>';
   } else {
     const st = startFor(e.n, reps, e.rir);
+    if (st) ph = fmt1(st);
     info = st ? '<span class="sug">Startvekt fra testen: '+fmt1(st)+' kg</span>' : '<span class="last">Første gang: finn vekta der toppen av spennet gir riktig reserve.</span>';
   }
-  let inputs = '<input class="in w" id="kg-'+i+'" data-f="kg" inputmode="decimal" aria-label="Kg" placeholder="kg" value="'+esc(cur.kg||"")+'">';
-  for (let j=0;j<n;j++) inputs += '<input class="in" data-f="r'+j+'" inputmode="numeric" aria-label="Reps sett '+(j+1)+'" placeholder="reps" value="'+esc(cur.reps[j]||"")+'">';
-  return '<div class="lg" data-k="'+esc(k)+'" data-n="'+n+'"><div class="row">'+inputs+'</div><div>'+info+' <span class="saved"></span></div></div>';
+  let rows = "";
+  for (let j=0;j<n;j++){ const c = cur[j]||{kg:"",reps:""};
+    rows += '<div class="row"><span class="k">Sett '+(j+1)+'</span><input class="in w" data-f="kg'+j+'" inputmode="decimal" aria-label="Kg sett '+(j+1)+'" placeholder="'+(ph||"kg")+'" value="'+esc(c.kg||"")+'"><span class="k">kg ×</span><input class="in" data-f="r'+j+'" inputmode="numeric" aria-label="Reps sett '+(j+1)+'" placeholder="reps" value="'+esc(c.reps||"")+'"></div>'; }
+  return '<div class="lg" data-k="'+esc(k)+'" data-n="'+n+'">'+rows+'<div>'+info+' <span class="saved"></span></div></div>';
 }
 function saveLift(box){
-  const k = box.dataset.k, n = +box.dataset.n;
-  const v = {kg: box.querySelector('[data-f="kg"]').value.trim(), reps: []};
-  for (let j=0;j<n;j++) v.reps.push(box.querySelector('[data-f="r'+j+'"]').value.trim());
-  LOG.lifts[k] = v; const ok = saveLog();
+  const k = box.dataset.k, n = +box.dataset.n; const sets = [];
+  for (let j=0;j<n;j++){
+    const kgI = box.querySelector('[data-f="kg'+j+'"]'), rI = box.querySelector('[data-f="r'+j+'"]');
+    let kg = kgI.value.trim(); const r = rI.value.trim();
+    if (!kg && r && j>0 && sets[j-1].kg) { kg = sets[j-1].kg; kgI.value = kg; }
+    sets.push({kg, reps:r});
+    const nx = box.querySelector('[data-f="kg'+(j+1)+'"]'); if (nx && kg && !nx.value) nx.placeholder = kg;
+  }
+  LOG.lifts[k] = {sets}; const ok = saveLog();
   const sv = box.querySelector(".saved"); if (sv) sv.textContent = ok ? "Lagret" : "Kunne ikke lagre";
 }
 function navy(b){ const w=num(b.waist), h=num(b.hip), n=num(b.neck); if(!(w>0&&h>0&&n>0)||w+h-n<=0) return NaN; return 495/(1.29579 - 0.35004*Math.log10(w+h-n) + 0.22100*Math.log10(160)) - 450; }
@@ -832,7 +844,7 @@ function renderSession(){
       '<label for="'+id+'"><div>'+(e.ssA?'<span class="ss-tag">Supersett med neste · </span>':'')+(e.ssB?'<span class="ss-tag">Supersett · </span>':'')+'<span class="name">'+e.n+'</span></div>'+
       '<div class="rx num"><span><b>'+(sets===""?reps:sets+extra+' × '+reps)+'</b>'+note+'</span>'+(rir!=="–"?'<span>RIR '+rir+'</span>':'')+(hv?'<span>Hvile '+hv+'</span>':'')+'<span>'+e.eq+'</span></div>'+
       '<p class="cue">'+e.c+'</p></label>'+(e.x?'<details class="how"><summary>Slik gjør du den</summary><p>'+e.x+'</p></details>':'')+
-      (e.spenst ? '' : logRow(curSess, e, (typeof sets==="number"?sets:e.s) + (grow && e.grow && !half ? 1 : 0), reps, i))+'</div>';
+      (e.spenst ? '' : logRow(curSess, e, (typeof sets==="number"?sets:e.s) + (grow && e.grow && !half ? 1 : 0), reps, i, !!(e.heavy && heavyWeek)))+'</div>';
   });
   html += '<p class="foot" style="margin:10px 0 0">Kg og reps lagres på denne telefonen så snart de skrives inn. Avkrysningen nullstilles hver dag.</p>';
   const box = document.getElementById("session"); box.innerHTML = html;
